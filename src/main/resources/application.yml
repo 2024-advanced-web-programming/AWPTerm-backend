@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: AWPTerm-backend
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:mysql://localhost:3306/awp_term?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: #??? ??? ?? ??, ??? ? ? ??? ???? ??? ??
+    password: #??? ??? ?? ??, ??? ? ? ??? ???? ??? ??
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
