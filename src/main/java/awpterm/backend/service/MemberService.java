@@ -23,4 +23,7 @@ public class MemberService {
         Member findMember = memberRepository.findById(member.getId()).orElse(null);
         return findMember != null && findMember.isSame(member);
     }
+    public Member findById(String id) {
+        return memberRepository.findById(id).orElse(null);
+    }
 }

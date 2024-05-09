@@ -9,5 +9,4 @@ class AwpTermBackendApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
