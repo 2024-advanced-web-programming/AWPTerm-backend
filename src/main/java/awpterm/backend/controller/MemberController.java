@@ -31,7 +31,10 @@ public class MemberController {
                 .password(memberLoginRequestDTO.getPassword().hashCode())
                 .build();
 
-        return ApiResponse.response(HttpStatus.OK, memberService.login(member));
+        if (!memberService.login(member))
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.", Boolean.FALSE);
+
+        return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
 
     @PostMapping("/register")
@@ -57,9 +60,8 @@ public class MemberController {
     }
 
     @GetMapping("/kakao/callback")
-    public HttpStatus kakaoCallBack(String code, HttpServletResponse res) throws IOException {
+    public void kakaoCallBack(String code, HttpServletResponse res) throws IOException {
         res.sendRedirect(Config.SERVER_URL + "/member/kakao/login?id="+code+"&password="+KakaoAPI.requestToken(code));
-        return HttpStatus.FOUND;
     }
 
     @GetMapping("/kakao/login")
