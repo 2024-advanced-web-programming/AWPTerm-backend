@@ -1,5 +1,6 @@
 package awpterm.backend.controller;
 
+import awpterm.backend.api.kakao.KakaoAPI;
 import awpterm.backend.api.request.MemberLoginRequestDTO;
 import awpterm.backend.api.request.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
@@ -67,5 +68,12 @@ public class MemberController {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.", Boolean.FALSE);
 
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
+    }
+
+    @GetMapping("/kakao/token")
+    public ApiResponse<String> kakaoToken(@RequestParam String code) {
+        String token = KakaoAPI.requestToken(code);
+
+        return ApiResponse.response(HttpStatus.OK, token);
     }
 }
