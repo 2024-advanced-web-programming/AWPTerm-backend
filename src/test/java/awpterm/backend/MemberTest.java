@@ -1,11 +1,14 @@
 package awpterm.backend;
 
+import awpterm.backend.api.request.MemberLoginRequestDTO;
+import awpterm.backend.api.request.MemberRegisterRequestDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Gender;
 import awpterm.backend.enums.Major;
 import awpterm.backend.enums.Position;
 import awpterm.backend.repository.MemberRepository;
 import awpterm.backend.service.MemberService;
+import awpterm.backend.util.SHA256;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +32,7 @@ class MemberTest {
 
         Member member = Member.builder()
                 .id(id)
-                .password(password.hashCode())
+                .password(password)
                 .name("testName")
                 .birthDate("2000-01-01")
                 .code("20190001")
@@ -40,7 +43,8 @@ class MemberTest {
                 .position(Position.학생)
                 .build();
 
-        memberService.register(member);
+        memberService.register(MemberRegisterRequestDTO.fromEntity(member));
+        member.setPassword(SHA256.encrypt(password));
         Member findMember = memberRepository.findById("testId").orElse(null);
 
         assertThat(member)
@@ -56,7 +60,7 @@ class MemberTest {
 
         Member member = Member.builder()
                 .id(id)
-                .password(password.hashCode())
+                .password(password)
                 .name("testName")
                 .birthDate("2000-01-01")
                 .code("20190001")
@@ -67,35 +71,35 @@ class MemberTest {
                 .position(Position.학생)
                 .build();
 
-        memberService.register(member);
+        memberService.register(MemberRegisterRequestDTO.fromEntity(member));
 
         Member right = Member.builder()
                 .id(id)
-                .password(password.hashCode())
+                .password(password)
                 .build();
 
         Member idWrong = Member.builder()
                 .id("test")
-                .password(password.hashCode())
+                .password(password)
                 .build();
 
         Member passwordWrong = Member.builder()
                 .id(id)
-                .password("test".hashCode())
+                .password("test")
                 .build();
 
         Member bothWrong = Member.builder()
                 .id("test")
-                .password("test".hashCode())
+                .password("test")
                 .build();
 
-        assertThat(memberService.login(right))
+        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(right)))
                 .isEqualTo(true);
-        assertThat(memberService.login(idWrong))
+        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(idWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(passwordWrong))
+        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(passwordWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(bothWrong))
+        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(bothWrong)))
                 .isEqualTo(false);
     }
 }

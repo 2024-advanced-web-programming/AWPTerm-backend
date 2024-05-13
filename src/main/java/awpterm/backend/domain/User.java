@@ -19,5 +19,5 @@ import lombok.experimental.SuperBuilder;
 public class User extends BaseEntity {
     @Id
     private String id;
-    private Integer password;
+    private String password;
 }

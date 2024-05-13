@@ -1,5 +1,7 @@
 package awpterm.backend.service;
 
+import awpterm.backend.api.request.MemberLoginRequestDTO;
+import awpterm.backend.api.request.MemberRegisterRequestDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +16,14 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public List<Member> register(Member member) {
+    public List<Member> register(MemberRegisterRequestDTO memberRegisterRequestDTO) {
+        Member member = memberRegisterRequestDTO.toEntity();
         memberRepository.save(member);
         return memberRepository.findAll();
     }
 
-    public boolean login(Member member) {
+    public boolean login(MemberLoginRequestDTO memberLoginRequestDTO) {
+        Member member = memberLoginRequestDTO.toEntity();
         Member findMember = memberRepository.findById(member.getId()).orElse(null);
         return findMember != null && findMember.isSame(member);
     }

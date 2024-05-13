@@ -3,26 +3,17 @@ package awpterm.backend.api.response;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Data
 @Builder
-public class ApiResponse<T> {
-    private HttpStatus code;
-    private String message;
+public class ApiResponse<T>{
     private T data;
 
-    public static <T> ApiResponse<T> response(HttpStatus code, T data) {
-        return ApiResponse.<T>builder()
-                .code(code)
-                .message(code.toString())
+    public static <T> ResponseEntity<ApiResponse<T>> response(HttpStatus code, T data) {
+        return new ResponseEntity<>(
+                ApiResponse.<T>builder()
                 .data(data)
-                .build();
-    }
-    public static <T> ApiResponse<T> response(HttpStatus code, String message, T data) {
-        return ApiResponse.<T>builder()
-                .code(code)
-                .message(message)
-                .data(data)
-                .build();
+                .build(), code);
     }
 }
