@@ -13,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
@@ -73,7 +76,12 @@ public class MemberController {
     @GetMapping("/kakao/token")
     public ApiResponse<String> kakaoToken(@RequestParam String code) {
         String token = KakaoAPI.requestToken(code);
-
-        return ApiResponse.response(HttpStatus.OK, token);
+        HashMap<String, Object> userInfo = KakaoAPI.getUserInfo(token);
+        if (token != null) {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "Token is NULL");
+        } else {
+            String data = "{\"id\":\"" + userInfo.get("id") + "\",\"email\":" + userInfo.get("email") + "\"}";
+            return ApiResponse.response(HttpStatus.OK, data);
+        }
     }
 }
