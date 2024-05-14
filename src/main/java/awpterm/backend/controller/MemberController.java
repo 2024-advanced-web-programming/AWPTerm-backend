@@ -40,6 +40,8 @@ public class MemberController {
             return ApiResponse.response(HttpStatus.UNPROCESSABLE_ENTITY, "카카오 회원이 현재 존재하지 않습니다.");
         }
 
+        System.out.println(memberLoginRequestDTO.toString());
+
         if (!memberService.login(memberLoginRequestDTO))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.");
 
@@ -50,10 +52,10 @@ public class MemberController {
     public ResponseEntity<?> kakaoToken(@RequestParam String code) {
         String token = KakaoAPI.requestToken(code);
         HashMap<String, Object> userInfo = KakaoAPI.getUserInfo(token);
-        if (token != null) {
+        if (token == null) {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "Token is NULL");
         } else {
-            String data = "{\"id\":\"" + userInfo.get("id") + "\",\"email\":" + userInfo.get("email") + "\"}";
+            String data = "{\"id\":\"" + userInfo.get("id") + "\",\"email\":\"" + userInfo.get("email") + "\"}";
             return ApiResponse.response(HttpStatus.OK, data);
         }
     }
