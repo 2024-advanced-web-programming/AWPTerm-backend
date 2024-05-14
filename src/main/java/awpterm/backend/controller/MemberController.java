@@ -40,8 +40,6 @@ public class MemberController {
             return ApiResponse.response(HttpStatus.UNPROCESSABLE_ENTITY, "카카오 회원이 현재 존재하지 않습니다.");
         }
 
-        System.out.println(memberLoginRequestDTO.toString());
-
         if (!memberService.login(memberLoginRequestDTO))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.");
 
