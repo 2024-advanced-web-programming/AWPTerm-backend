@@ -43,7 +43,7 @@ class MemberTest {
                 .position(Position.학생)
                 .build();
 
-        memberService.register(MemberRegisterRequestDTO.fromEntity(member));
+        memberService.register(MemberRegisterRequestDTO.of(member));
         member.setPassword(SHA256.encrypt(password));
         Member findMember = memberRepository.findById("testId").orElse(null);
 
@@ -71,7 +71,7 @@ class MemberTest {
                 .position(Position.학생)
                 .build();
 
-        memberService.register(MemberRegisterRequestDTO.fromEntity(member));
+        memberService.register(MemberRegisterRequestDTO.of(member));
 
         Member right = Member.builder()
                 .id(id)
@@ -93,13 +93,13 @@ class MemberTest {
                 .password("test")
                 .build();
 
-        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(right)))
+        assertThat(memberService.login(MemberLoginRequestDTO.of(right)))
                 .isEqualTo(true);
-        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(idWrong)))
+        assertThat(memberService.login(MemberLoginRequestDTO.of(idWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(passwordWrong)))
+        assertThat(memberService.login(MemberLoginRequestDTO.of(passwordWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(MemberLoginRequestDTO.fromEntity(bothWrong)))
+        assertThat(memberService.login(MemberLoginRequestDTO.of(bothWrong)))
                 .isEqualTo(false);
     }
 }

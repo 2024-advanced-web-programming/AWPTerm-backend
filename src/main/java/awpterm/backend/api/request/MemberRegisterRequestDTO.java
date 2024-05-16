@@ -38,7 +38,7 @@ public class MemberRegisterRequestDTO {
                 .build();
     }
 
-    public static MemberRegisterRequestDTO fromEntity(Member member) {
+    public static MemberRegisterRequestDTO of(Member member) {
         return MemberRegisterRequestDTO.builder()
                 .id(member.getId())
                 .password(member.getPassword())
