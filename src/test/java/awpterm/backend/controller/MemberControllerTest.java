@@ -1,4 +1,4 @@
-package awpterm.backend;
+package awpterm.backend.controller;
 
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;

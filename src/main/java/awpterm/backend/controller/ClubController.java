@@ -20,9 +20,9 @@ public class ClubController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody ClubRegisterRequestDTO clubRegisterRequestDTO) {
         if (!clubServiceFacade.isValidMemberByCode(clubRegisterRequestDTO.getRequestorCode()))
-            return ApiResponse.response(HttpStatus.BAD_REQUEST, "신청자 ID가 잘못 입력되었습니다.");
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "신청자 학번이 잘못 입력되었습니다.");
         if (!clubServiceFacade.isValidMemberByCode(clubRegisterRequestDTO.getSupervisorCode()))
-            return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 ID가 잘못 입력되었습니다.");
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 코드가 잘못 입력되었습니다.");
 
         return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
     }

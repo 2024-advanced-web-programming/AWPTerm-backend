@@ -26,7 +26,7 @@ public class ClubServiceFacade {
         return memberService.isValidMemberByCode(memberCode);
     }
 
-    public List<Club> register(ClubRegisterRequestDTO clubRegisterRequestDTO) {
+    public Club register(ClubRegisterRequestDTO clubRegisterRequestDTO) {
         Club club = clubRegisterRequestDTO.toEntity();
         Member president = memberService.findByCode(clubRegisterRequestDTO.getRequestorCode());
         Member supervisor = memberService.findByCode(clubRegisterRequestDTO.getSupervisorCode());
@@ -38,5 +38,9 @@ public class ClubServiceFacade {
         club.setStatus(Status.검토);
 
         return clubService.register(club);
+    }
+
+    public Club findById(Long id) {
+        return clubService.findById(id);
     }
 }

@@ -11,4 +11,8 @@ endif::[]
 
 [[Member-API]]
 == Member API
-include::api/member/member.adoc[]
+include::api/member.adoc[]
+
+[[Club-API]]
+== Club API
+include::api/club.adoc[]

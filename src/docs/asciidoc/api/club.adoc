@@ -1,0 +1,11 @@
+[[club]]
+=== 동아리 등록 신청
+==== 요청
+include::{snippets}/club-register-right/http-request.adoc[]
+
+==== 응답
+include::{snippets}/club-register-right/http-response.adoc[]
+
+==== 응답(신청자/지도교수 코드가 잘못 입력됨)
+include::{snippets}/club-register-wrong/http-response.adoc[]
+

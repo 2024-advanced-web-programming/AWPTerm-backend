@@ -1,4 +1,4 @@
-[[professors]]
+[[member]]
 === 회원 가입
 ==== 요청
 include::{snippets}/member-register/http-request.adoc[]

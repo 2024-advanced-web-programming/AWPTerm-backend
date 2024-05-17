@@ -14,8 +14,12 @@ import java.util.List;
 public class ClubService {
     private final ClubRepository clubRepository;
 
-    public List<Club> register(Club club) {
+    public Club register(Club club) {
         clubRepository.save(club);
-        return clubRepository.findAll();
+        return clubRepository.findById(club.getId()).orElse(null);
+    }
+
+    public Club findById(Long id) {
+        return clubRepository.findById(id).orElse(null);
     }
 }

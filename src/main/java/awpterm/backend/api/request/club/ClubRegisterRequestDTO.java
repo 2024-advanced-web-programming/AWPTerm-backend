@@ -10,9 +10,9 @@ import lombok.Data;
 public class ClubRegisterRequestDTO {
     private String clubType;
     private String name;
+    private String requestorCode;
     private String requestorName;
     private String requestorMajor;
-    private String requestorCode;
     private String requestorPhoneNumber;
     private String supervisorCode;
     private String supervisorName;
