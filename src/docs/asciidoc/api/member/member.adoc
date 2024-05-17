@@ -1,0 +1,9 @@
+[[item-create]]
+=== 교수 조회
+
+==== HTTP Request
+include::{snippets}/professors/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/professors/http-response.adoc[]
+include::{snippets}/professors/response-fields.adoc[]

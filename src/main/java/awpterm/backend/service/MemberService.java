@@ -2,6 +2,7 @@ package awpterm.backend.service;
 
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
+import awpterm.backend.api.response.MemberResponseDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import awpterm.backend.repository.MemberRepository;
@@ -17,10 +18,10 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public List<Member> register(MemberRegisterRequestDTO memberRegisterRequestDTO) {
+    public MemberResponseDTO register(MemberRegisterRequestDTO memberRegisterRequestDTO) {
         Member member = memberRegisterRequestDTO.toEntity();
         memberRepository.save(member);
-        return memberRepository.findAll();
+        return MemberResponseDTO.of(member);
     }
 
     public boolean isValidLoginRequest(MemberLoginRequestDTO memberLoginRequestDTO) {
@@ -32,11 +33,20 @@ public class MemberService {
         return memberRepository.findById(id).orElse(null);
     }
 
-    public boolean isValidMember(String memberId) {
+    public Member findByCode(String code) {
+        return memberRepository.findByCode(code);
+    }
+
+    public boolean isValidMemberById(String memberId) {
         return memberRepository.findById(memberId).orElse(null) != null;
     }
 
-    public List<Member> findByPosition(Position position) {
-        return memberRepository.findByPosition(position);
+    public boolean isValidMemberByCode(String memberCode) {
+        return memberRepository.findByCode(memberCode) != null;
+    }
+
+    public List<MemberResponseDTO> findByPosition(Position position) {
+        List<Member> members = memberRepository.findByPosition(position);
+        return members.stream().map(MemberResponseDTO::of).toList();
     }
 }

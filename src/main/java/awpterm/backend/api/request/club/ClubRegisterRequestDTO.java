@@ -10,12 +10,11 @@ import lombok.Data;
 public class ClubRegisterRequestDTO {
     private String clubType;
     private String name;
-    private String requestorId;
     private String requestorName;
     private String requestorMajor;
     private String requestorCode;
     private String requestorPhoneNumber;
-    private String supervisorId;
+    private String supervisorCode;
     private String supervisorName;
     private String supervisorMajor;
     private String supervisorPhoneNumber;
@@ -31,12 +30,11 @@ public class ClubRegisterRequestDTO {
         return ClubRegisterRequestDTO.builder()
                 .clubType(club.getClubType().toString())
                 .name(club.getName())
-                .requestorId(club.getPresident().getId())
                 .requestorName(club.getPresident().getName())
                 .requestorMajor(club.getPresident().getMajor().toString())
                 .requestorCode(club.getPresident().getCode())
                 .requestorPhoneNumber(club.getPresident().getPhoneNumber())
-                .supervisorId(club.getSupervisor().getId())
+                .supervisorCode(club.getSupervisor().getCode())
                 .supervisorName(club.getSupervisor().getName())
                 .supervisorMajor(club.getSupervisor().getMajor().toString())
                 .supervisorPhoneNumber(club.getSupervisor().getPhoneNumber())

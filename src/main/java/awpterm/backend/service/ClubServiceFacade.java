@@ -18,14 +18,18 @@ public class ClubServiceFacade {
     private final ClubService clubService;
     private final MemberService memberService;
 
-    public boolean isValidMember(String memberId) {
-        return memberService.isValidMember(memberId);
+    public boolean isValidMemberById(String memberId) {
+        return memberService.isValidMemberById(memberId);
+    }
+
+    public boolean isValidMemberByCode(String memberCode) {
+        return memberService.isValidMemberByCode(memberCode);
     }
 
     public List<Club> register(ClubRegisterRequestDTO clubRegisterRequestDTO) {
         Club club = clubRegisterRequestDTO.toEntity();
-        Member president = memberService.findById(clubRegisterRequestDTO.getRequestorId());
-        Member supervisor = memberService.findById(clubRegisterRequestDTO.getSupervisorId());
+        Member president = memberService.findByCode(clubRegisterRequestDTO.getRequestorCode());
+        Member supervisor = memberService.findByCode(clubRegisterRequestDTO.getSupervisorCode());
         ClubMaster clubMaster = ClubMaster.builder().club(club).master(president).build();
 
         club.setPresident(president);
