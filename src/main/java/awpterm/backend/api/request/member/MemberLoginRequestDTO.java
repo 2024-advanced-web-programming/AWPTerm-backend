@@ -1,4 +1,4 @@
-package awpterm.backend.api.request;
+package awpterm.backend.api.request.member;
 
 import awpterm.backend.domain.Member;
 import awpterm.backend.util.SHA256;

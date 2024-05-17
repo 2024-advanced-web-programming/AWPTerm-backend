@@ -1,7 +1,7 @@
 package awpterm.backend;
 
-import awpterm.backend.api.request.MemberLoginRequestDTO;
-import awpterm.backend.api.request.MemberRegisterRequestDTO;
+import awpterm.backend.api.request.member.MemberLoginRequestDTO;
+import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Gender;
 import awpterm.backend.enums.Major;
@@ -93,13 +93,13 @@ class MemberTest {
                 .password("test")
                 .build();
 
-        assertThat(memberService.login(MemberLoginRequestDTO.of(right)))
+        assertThat(memberService.isValidLoginRequest(MemberLoginRequestDTO.of(right)))
                 .isEqualTo(true);
-        assertThat(memberService.login(MemberLoginRequestDTO.of(idWrong)))
+        assertThat(memberService.isValidLoginRequest(MemberLoginRequestDTO.of(idWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(MemberLoginRequestDTO.of(passwordWrong)))
+        assertThat(memberService.isValidLoginRequest(MemberLoginRequestDTO.of(passwordWrong)))
                 .isEqualTo(false);
-        assertThat(memberService.login(MemberLoginRequestDTO.of(bothWrong)))
+        assertThat(memberService.isValidLoginRequest(MemberLoginRequestDTO.of(bothWrong)))
                 .isEqualTo(false);
     }
 }

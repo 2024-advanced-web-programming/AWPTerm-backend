@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,9 +31,11 @@ public class Club extends BaseEntity {
     @ManyToOne
     private Member secretary;
     @OneToMany(mappedBy = "club")
-    private List<ClubMaster> masters;
+    @Builder.Default
+    private List<ClubMaster> masters = new ArrayList<>();
     @OneToMany(mappedBy = "club")
-    private List<ClubMember> members;
+    @Builder.Default
+    private List<ClubMember> members = new ArrayList<>();
     private Status status;
     @Embedded
     private ClubDetail clubDetail;

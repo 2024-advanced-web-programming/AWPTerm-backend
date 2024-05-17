@@ -1,8 +1,9 @@
 package awpterm.backend.service;
 
-import awpterm.backend.api.request.MemberLoginRequestDTO;
-import awpterm.backend.api.request.MemberRegisterRequestDTO;
+import awpterm.backend.api.request.member.MemberLoginRequestDTO;
+import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.domain.Member;
+import awpterm.backend.enums.Position;
 import awpterm.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,20 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public boolean login(MemberLoginRequestDTO memberLoginRequestDTO) {
+    public boolean isValidLoginRequest(MemberLoginRequestDTO memberLoginRequestDTO) {
         Member member = memberLoginRequestDTO.toEntity();
         Member findMember = memberRepository.findById(member.getId()).orElse(null);
         return findMember != null && findMember.isSame(member);
     }
     public Member findById(String id) {
         return memberRepository.findById(id).orElse(null);
+    }
+
+    public boolean isValidMember(String memberId) {
+        return memberRepository.findById(memberId).orElse(null) != null;
+    }
+
+    public List<Member> findByPosition(Position position) {
+        return memberRepository.findByPosition(position);
     }
 }
