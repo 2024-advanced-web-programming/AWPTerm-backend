@@ -2,7 +2,7 @@ package awpterm.backend.service;
 
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
-import awpterm.backend.api.response.MemberResponseDTO;
+import awpterm.backend.api.response.member.MemberResponseDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import awpterm.backend.repository.MemberRepository;

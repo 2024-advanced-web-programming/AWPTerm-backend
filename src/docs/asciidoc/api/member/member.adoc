@@ -1,9 +1,24 @@
-[[item-create]]
-=== 교수 조회
+[[professors]]
+=== 회원 가입
+==== 요청
+include::{snippets}/member-register/http-request.adoc[]
 
-==== HTTP Request
+==== 응답
+include::{snippets}/member-register/http-response.adoc[]
+
+=== 로그인
+==== 요청
+include::{snippets}/member-login-right/http-request.adoc[]
+
+==== 응답
+include::{snippets}/member-login-right/http-response.adoc[]
+
+==== 응답(로그인 정보가 틀림)
+include::{snippets}/member-login-wrong/http-response.adoc[]
+
+=== 교수 조회
+==== 요청
 include::{snippets}/professors/http-request.adoc[]
 
-==== HTTP Response
+==== 응답
 include::{snippets}/professors/http-response.adoc[]
-include::{snippets}/professors/response-fields.adoc[]

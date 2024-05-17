@@ -1,7 +1,7 @@
 ifndef::snippets[]
 :snippets: build/generated-snippets
 endif::[]
-= 상점 REST API 문서
+= 동아리 커뮤니티 REST API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs

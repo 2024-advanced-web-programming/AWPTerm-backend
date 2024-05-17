@@ -1,4 +1,4 @@
-package awpterm.backend.api.response;
+package awpterm.backend.api.response.member;
 
 import awpterm.backend.domain.Member;
 import lombok.Builder;
