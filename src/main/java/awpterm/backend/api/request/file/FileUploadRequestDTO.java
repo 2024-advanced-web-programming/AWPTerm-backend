@@ -11,12 +11,4 @@ public class FileUploadRequestDTO {
     private String type;
     private String name;
     private Byte[] content;
-
-    public File toEntity() {
-        return File.builder()
-                .type(FileType.valueOf(type))
-                .name(name)
-                .content(content)
-                .build();
-    }
 }

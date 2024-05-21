@@ -3,6 +3,7 @@ package awpterm.backend.service;
 import awpterm.backend.api.request.file.FileUploadRequestDTO;
 import awpterm.backend.api.response.file.FileResponseDTO;
 import awpterm.backend.domain.File;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.FileType;
 import awpterm.backend.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,13 @@ public class FileService {
         return fileRepository.findByType(FileType.valueOf(type)).stream().map(FileResponseDTO::of).toList();
     }
 
-    public FileResponseDTO upload(FileUploadRequestDTO fileUploadRequestDTO) {
-        File file = fileUploadRequestDTO.toEntity();
+    public FileResponseDTO upload(Member loginMember, FileUploadRequestDTO fileUploadRequestDTO) {
+        File file = File.builder()
+                .name(fileUploadRequestDTO.getName())
+                .type(FileType.valueOf(fileUploadRequestDTO.getType()))
+                .content(fileUploadRequestDTO.getContent())
+                .uploader(loginMember)
+                .build();
         fileRepository.save(file);
 
         return FileResponseDTO.of(file);

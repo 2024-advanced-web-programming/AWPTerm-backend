@@ -35,6 +35,9 @@ public class Club extends BaseEntity {
     @OneToMany(mappedBy = "club")
     @Builder.Default
     private List<ClubMember> members = new ArrayList<>();
+    @OneToMany(mappedBy = "club")
+    @Builder.Default
+    private List<ClubApplicant> applicants = new ArrayList<>();
     private Status status;
     @Embedded
     private ClubDetail clubDetail;

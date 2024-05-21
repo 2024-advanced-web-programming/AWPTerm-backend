@@ -3,6 +3,7 @@ package awpterm.backend.service;
 import awpterm.backend.api.request.club.ClubStatusRequestDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.enums.Status;
+import awpterm.backend.repository.ClubMemberRepository;
 import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

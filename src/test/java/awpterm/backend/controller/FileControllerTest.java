@@ -3,6 +3,7 @@ package awpterm.backend.controller;
 import awpterm.backend.api.request.file.FileUploadRequestDTO;
 import awpterm.backend.api.response.file.FileResponseDTO;
 import awpterm.backend.domain.File;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.FileType;
 import awpterm.backend.repository.FileRepository;
 import awpterm.backend.service.FileService;
@@ -12,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -29,13 +28,13 @@ class FileControllerTest {
     @BeforeEach
     void 테스트_데이터_삽입() {
         File file1 = File.builder()
-                .type(FileType.사진)
+                .type(FileType.PICTURE)
                 .name("테크모")
                 .content(File.readFile("src/test/resources/static/테크모.jpg"))
                 .build();
 
         File file2 = File.builder()
-                .type(FileType.가입신청서)
+                .type(FileType.APPLICATION_FORM)
                 .name("가입신청서")
                 .content(File.readFile("src/test/resources/static/가입신청서_테스트.docx"))
                 .build();
@@ -59,12 +58,12 @@ class FileControllerTest {
     @Test
     void 업로드() {
         FileUploadRequestDTO dto = FileUploadRequestDTO.builder()
-                .type("사진")
+                .type(FileType.PICTURE.toString())
                 .name("KIT")
                 .content(File.readFile("src/test/resources/static/KIT.jpg"))
                 .build();
 
-        FileResponseDTO result = fileService.upload(dto);
+        FileResponseDTO result = fileService.upload(Member.builder().build(), dto);
         File findFile = fileRepository.findByName("KIT");
         assertThat(result.getContent()).isEqualTo(findFile.getContent());
     }

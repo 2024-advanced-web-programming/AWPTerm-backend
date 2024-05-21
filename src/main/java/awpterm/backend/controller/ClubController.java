@@ -1,15 +1,18 @@
 package awpterm.backend.controller;
 
+import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
+import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.domain.ClubMember;
+import awpterm.backend.domain.Member;
 import awpterm.backend.service.ClubServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/club")
@@ -25,5 +28,31 @@ public class ClubController {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 코드가 잘못 입력되었습니다.");
 
         return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
+    }
+
+    @PostMapping("/application")
+    public ResponseEntity<?> application(@SessionAttribute Member loginMember, @RequestBody ClubApplicationRequestDTO clubApplicationRequestDTO) {
+        //TODO 추후 세션 설정
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
+    }
+
+    @GetMapping("/application/list/{clubId}")
+    public ResponseEntity<?> applicationList(@PathVariable Long clubId) {
+        if (clubServiceFacade.findById(clubId) == null)
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "동아리가 존재하지 않습니다.");
+
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(clubId));
+    }
+
+    @PostMapping("/application/decision")
+    public ResponseEntity<?> applicationDecision(@RequestBody ClubApplicationDecisionDTO clubApplicationDecisionDTO) {
+        clubServiceFacade.applicationDecision(clubApplicationDecisionDTO);
+        return ApiResponse.response(HttpStatus.OK, null);
+    }
+
+    @DeleteMapping("/dismiss")
+    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam Long memberId) {
+        clubServiceFacade.clubMemberDelete(clubId, memberId);
+        return ApiResponse.response(HttpStatus.OK, null);
     }
 }

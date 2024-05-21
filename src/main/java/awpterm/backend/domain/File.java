@@ -6,9 +6,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ArrayUtils;
-import org.hibernate.annotations.SecondaryRow;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Getter
-@SecondaryRow
+@Setter
 @Entity
 @SuperBuilder
 @NoArgsConstructor
@@ -30,6 +30,8 @@ public class File extends BaseEntity {
     @Column(columnDefinition = "MEDIUMBLOB")
     @Lob
     private Byte[] content;
+    @OneToOne
+    private Member uploader;
 
     public static Byte[] readFile(String filePath) {
         Path path = Paths.get(filePath);
