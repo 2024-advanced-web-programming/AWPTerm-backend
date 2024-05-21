@@ -1,0 +1,28 @@
+[[file]]
+=== 파일 목록 조회
+==== 요청
+include::{snippets}/file-list/http-request.adoc[]
+
+==== 응답
+include::{snippets}/file-list/http-response.adoc[]
+
+=== 파일 목록 타입으로 조회
+==== 요청(/file/list/{타입명})
+include::{snippets}/file-list-type/http-request.adoc[]
+
+==== 응답
+include::{snippets}/file-list-type/http-response.adoc[]
+
+=== 파일 업로드
+==== 요청
+include::{snippets}/file-upload/http-request.adoc[]
+
+==== 응답
+include::{snippets}/file-upload/http-response.adoc[]
+
+=== 파일 다운로드
+==== 요청
+include::{snippets}/file-download/http-request.adoc[]
+
+==== 응답
+include::{snippets}/file-download/http-response.adoc[]

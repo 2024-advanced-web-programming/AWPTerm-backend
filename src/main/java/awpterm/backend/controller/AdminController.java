@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
+    // TODO 아래와 같이 2개 이상의 종속성이 발생하면 파사드 패턴으로 묶어줄 것
     private final AdminService adminService;
     private final ClubService clubService;
 
@@ -37,6 +38,8 @@ public class AdminController {
         List<Club> clubList = clubService.findByStatus(Status.검토);
         return ApiResponse.response(HttpStatus.OK, clubList);
     }
+
+    //TODO 아래 내용은 클럽 API로 옮기는 것이 적절할 듯
     @PutMapping("/updateStatus")
     public ResponseEntity<?> updateClubStatus(@RequestParam Long id, @RequestParam String status) {
         if(!clubService.updateStatus(id, status)) {
