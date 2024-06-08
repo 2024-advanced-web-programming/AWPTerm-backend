@@ -17,6 +17,11 @@ public class AdminService {
     public boolean isAdmin(String adminId) { //admin인지 확인하기 위해서
         return adminRepository.findById(adminId).orElse(null) != null;
     }
+
+    public Admin findById(String adminId) {
+        return adminRepository.findById(adminId).orElse(null);
+    }
+
     public boolean isValidLoginRequest(AdminLoginRequestDTO adminLoginRequestDTO) {
         Admin admin = adminLoginRequestDTO.toEntity();
         Admin findAdmin = adminRepository.findById(admin.getId()).orElse(null);

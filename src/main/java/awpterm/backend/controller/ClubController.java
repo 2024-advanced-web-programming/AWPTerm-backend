@@ -4,15 +4,13 @@ import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
-import awpterm.backend.domain.ClubMember;
 import awpterm.backend.domain.Member;
+import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.ClubServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/club")
@@ -31,8 +29,8 @@ public class ClubController {
     }
 
     @PostMapping("/application")
-    public ResponseEntity<?> application(@SessionAttribute Member loginMember, @RequestBody ClubApplicationRequestDTO clubApplicationRequestDTO) {
-        //TODO 추후 세션 설정
+    public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
+                                         @RequestBody ClubApplicationRequestDTO clubApplicationRequestDTO) {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
     }
 
