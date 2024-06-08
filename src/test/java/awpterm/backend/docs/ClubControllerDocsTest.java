@@ -1,6 +1,9 @@
 package awpterm.backend.docs;
 
+import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
+import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.controller.ClubController;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMaster;
@@ -9,6 +12,8 @@ import awpterm.backend.enums.*;
 import awpterm.backend.service.ClubServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +25,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseBody;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,6 +109,124 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("club-register-right",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+
+    @Test
+    void 동아리_가입_신청_테스트() throws Exception {
+        Member requestor = Member.builder()
+                .name("testRequestor")
+                .birthDate("2000-00-00")
+                .code("20190001")
+                .phoneNumber("010-1111-1111")
+                .email("test@kumoh.ac.kr")
+                .gender(Gender.여자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        ClubApplicationRequestDTO request = ClubApplicationRequestDTO.builder()
+                .clubId(1L)
+                .fileName(null)
+                .fileContent(null)
+                .build();
+
+        ClubApplicationResponseDTO response = ClubApplicationResponseDTO.builder()
+                        .code(requestor.getCode())
+                                .name(requestor.getName())
+                                        .applicationForm(null)
+                                                .build();
+
+        given(clubServiceFacade.apply(requestor, request)).willReturn(response);
+        mockMvc.perform(post("/club/application")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-application",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+
+    @Test
+    void 동아리_리스트_테스트() throws Exception {
+        List<ClubApplicationResponseDTO> applicationResponseDTOS = new ArrayList<>();
+        applicationResponseDTOS.add(
+                ClubApplicationResponseDTO.builder()
+                        .code("20190001")
+                        .name("testMember1")
+                        .applicationForm(null)
+                        .build()
+        );
+        applicationResponseDTOS.add(
+                ClubApplicationResponseDTO.builder()
+                        .code("20190002")
+                        .name("testMember2")
+                        .applicationForm(null)
+                        .build()
+        );
+
+        given(clubServiceFacade.findById(any())).willReturn(new Club());
+        given(clubServiceFacade.getApplicationList(1L)).willReturn(applicationResponseDTOS);
+        mockMvc.perform(get("/club/application/list/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-application-list-right",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+
+        given(clubServiceFacade.findById(any())).willReturn(null);
+        mockMvc.perform(get("/club/application/list/1L")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("club-application-list-wrong",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+
+    @Test
+    void 동아리_신청_결정_테스트() throws Exception {
+        ClubApplicationDecisionDTO request = ClubApplicationDecisionDTO.builder()
+                        .clubId(1L)
+                        .memberId("testId")
+                        .isApproval(true)
+                        .build();
+
+        mockMvc.perform(post("/club/application/decision")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-application-decision",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+
+    @Test
+    void 동아리_회원탈퇴_테스트() throws Exception {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("clubId", "1");
+        params.add("memberId", "testId");
+
+        mockMvc.perform(delete("/club/dismiss")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-dismiss",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestBody(),

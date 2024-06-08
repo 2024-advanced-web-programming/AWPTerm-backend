@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class ClubApplicationDecisionDTO {
     private Long clubId;
-    private Long memberId;
+    private String memberId;
     private Boolean isApproval;
 }

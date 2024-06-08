@@ -100,7 +100,7 @@ public class ClubServiceFacade {
     }
 
 
-    public void clubMemberDelete(Long clubId, Long memberId) {
+    public void clubMemberDelete(Long clubId, String memberId) {
         Club club = clubService.findById(clubId);
         Member member = memberService.findById(String.valueOf(memberId));
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);

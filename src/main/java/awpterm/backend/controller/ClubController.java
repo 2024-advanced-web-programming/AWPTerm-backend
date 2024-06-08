@@ -49,7 +49,7 @@ public class ClubController {
     }
 
     @DeleteMapping("/dismiss")
-    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam Long memberId) {
+    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam String memberId) {
         clubServiceFacade.clubMemberDelete(clubId, memberId);
         return ApiResponse.response(HttpStatus.OK, null);
     }
