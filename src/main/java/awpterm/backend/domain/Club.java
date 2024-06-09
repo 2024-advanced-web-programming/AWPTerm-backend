@@ -41,6 +41,4 @@ public class Club extends BaseEntity {
     private Status status;
     @Embedded
     private ClubDetail clubDetail;
-    @OneToMany(mappedBy = "club")
-    private List<ClubPictureFileProperty> representativePictures;
 }

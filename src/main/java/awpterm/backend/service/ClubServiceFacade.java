@@ -54,8 +54,7 @@ public class ClubServiceFacade {
         Club club = clubService.findById(clubApplicationRequestDTO.getClubId());
         filePropertyService.storeFile(clubApplicationRequestDTO.getMultipartFile());
 
-        ClubApplicationFormFileProperty file = (ClubApplicationFormFileProperty) FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
-        file.setClub(club);
+        FileProperty file = FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
         clubApplicantService.save(
                 ClubApplicant.builder()
                         .club(club)
