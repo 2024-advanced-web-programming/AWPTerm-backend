@@ -1,7 +1,6 @@
 package awpterm.backend.api.response.club;
 
-import awpterm.backend.domain.ClubApplicant;
-import awpterm.backend.domain.File;
+import awpterm.backend.domain.FileProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,5 +9,5 @@ import lombok.Data;
 public class ClubApplicationResponseDTO {
     private String code;
     private String name;
-    private File applicationForm;
+    private FileProperty applicationForm;
 }

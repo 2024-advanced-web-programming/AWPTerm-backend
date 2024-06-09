@@ -1,12 +1,10 @@
 package awpterm.backend.docs;
 
-import awpterm.backend.api.request.file.FileUploadRequestDTO;
-import awpterm.backend.api.response.file.FileResponseDTO;
-import awpterm.backend.controller.FileController;
-import awpterm.backend.domain.File;
+import awpterm.backend.api.response.file.FilePropertyResponseDTO;
+import awpterm.backend.domain.FileProperty;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.FileType;
-import awpterm.backend.service.FileService;
+import awpterm.backend.service.FilePropertyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -27,33 +25,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FileControllerDocsTest extends RestDocsTest {
-    private final FileService fileService = mock(FileService.class);
+    private final FilePropertyService filePropertyService = mock(FilePropertyService.class);
 
 
     @Override
     protected Object initController() {
-        return new FileController(fileService);
+        return new FileController(filePropertyService);
     }
 
     @Test
     void 리스트_테스트() throws Exception {
-        File file1 = File.builder()
+        FileProperty fileProperty1 = FileProperty.builder()
                 .type(FileType.PICTURE)
                 .name("테크모")
-                .content(File.readFile("src/test/resources/static/테크모.jpg"))
+                .content(FileProperty.readFile("src/test/resources/static/테크모.jpg"))
                 .build();
 
-        File file2 = File.builder()
+        FileProperty fileProperty2 = FileProperty.builder()
                 .type(FileType.APPLICATION_FORM)
                 .name("가입신청서")
-                .content(File.readFile("src/test/resources/static/가입신청서_테스트.docx"))
+                .content(FileProperty.readFile("src/test/resources/static/가입신청서_테스트.docx"))
                 .build();
 
-        List<FileResponseDTO> result = new ArrayList<>();
-        result.add(FileResponseDTO.of(file1));
-        result.add(FileResponseDTO.of(file2));
+        List<FilePropertyResponseDTO> result = new ArrayList<>();
+        result.add(FilePropertyResponseDTO.of(fileProperty1));
+        result.add(FilePropertyResponseDTO.of(fileProperty2));
 
-        given(fileService.getList())
+        given(filePropertyService.getList())
                 .willReturn(result);
 
         mockMvc.perform(get("/file/list")
@@ -69,15 +67,15 @@ public class FileControllerDocsTest extends RestDocsTest {
 
     @Test
     void 리스트_테스트_타입() throws Exception {
-        File file1 = File.builder()
+        FileProperty fileProperty1 = FileProperty.builder()
                 .type(FileType.PICTURE)
                 .name("테크모")
-                .content(File.readFile("src/test/resources/static/테크모.jpg"))
+                .content(FileProperty.readFile("src/test/resources/static/테크모.jpg"))
                 .build();
-        List<FileResponseDTO> result = new ArrayList<>();
-        result.add(FileResponseDTO.of(file1));
+        List<FilePropertyResponseDTO> result = new ArrayList<>();
+        result.add(FilePropertyResponseDTO.of(fileProperty1));
 
-        given(fileService.getList(FileType.PICTURE.toString()))
+        given(filePropertyService.getList(FileType.PICTURE.toString()))
                 .willReturn(result);
 
         mockMvc.perform(get("/file/list/PICTURE")
@@ -96,9 +94,9 @@ public class FileControllerDocsTest extends RestDocsTest {
         FileUploadRequestDTO dto = FileUploadRequestDTO.builder()
                 .type(FileType.PICTURE.toString())
                 .name("KIT")
-                .content(File.readFile("src/test/resources/static/KIT.jpg"))
+                .content(FileProperty.readFile("src/test/resources/static/KIT.jpg"))
                 .build();
-        FileResponseDTO result = FileResponseDTO.of(File.builder()
+        FilePropertyResponseDTO result = FilePropertyResponseDTO.of(FileProperty.builder()
                 .type(FileType.valueOf(dto.getType()))
                 .name(dto.getName())
                 .content(dto.getContent())
@@ -106,7 +104,7 @@ public class FileControllerDocsTest extends RestDocsTest {
                 .build());
         result.setId(3L);
 
-        given(fileService.upload(any(Member.class), dto))
+        given(filePropertyService.upload(any(Member.class), dto))
                 .willReturn(result);
 
         mockMvc.perform(post("/file/upload")
@@ -123,12 +121,12 @@ public class FileControllerDocsTest extends RestDocsTest {
 
     @Test
     void 다운로드() throws Exception {
-        FileResponseDTO dto = FileResponseDTO.builder()
+        FilePropertyResponseDTO dto = FilePropertyResponseDTO.builder()
                 .id(1L)
                 .name("테크모")
-                .content(File.readFile("src/test/resources/static/테크모.jpg"))
+                .content(FileProperty.readFile("src/test/resources/static/테크모.jpg"))
                 .build();
-        given(fileService.download(1L))
+        given(filePropertyService.download(1L))
                 .willReturn(dto);
 
         mockMvc.perform(get("/file/download/1")

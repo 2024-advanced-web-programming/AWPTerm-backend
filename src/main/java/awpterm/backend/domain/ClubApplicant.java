@@ -21,5 +21,5 @@ public class ClubApplicant extends BaseEntity {
     @ManyToOne
     private Member applicant;
     @OneToOne
-    private File applicationForm;
+    private FileProperty applicationForm;
 }

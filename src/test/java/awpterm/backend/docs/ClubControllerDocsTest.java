@@ -1,7 +1,6 @@
 package awpterm.backend.docs;
 
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
-import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.controller.ClubController;

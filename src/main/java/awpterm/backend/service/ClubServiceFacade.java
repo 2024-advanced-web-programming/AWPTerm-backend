@@ -3,16 +3,14 @@ package awpterm.backend.service;
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
-import awpterm.backend.api.request.file.FileUploadRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
-import awpterm.backend.api.response.file.FileResponseDTO;
 import awpterm.backend.domain.*;
-import awpterm.backend.enums.FileType;
 import awpterm.backend.enums.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class ClubServiceFacade {
     private final ClubMemberService clubMemberService;
     private final ClubApplicantService clubApplicantService;
     private final MemberService memberService;
-    private final FileService fileService;
+    private final FilePropertyService filePropertyService;
 
     public boolean isValidMemberById(String memberId) {
         return memberService.isValidMemberById(memberId);
@@ -52,34 +50,24 @@ public class ClubServiceFacade {
         return clubService.findById(id);
     }
 
-    public ClubApplicationResponseDTO apply(Member loginMember, ClubApplicationRequestDTO clubApplicationRequestDTO) {
+    public ClubApplicationResponseDTO apply(Member loginMember, ClubApplicationRequestDTO clubApplicationRequestDTO) throws IOException {
         Club club = clubService.findById(clubApplicationRequestDTO.getClubId());
+        filePropertyService.storeFile(clubApplicationRequestDTO.getMultipartFile());
 
-        FileUploadRequestDTO uploadRequest = FileUploadRequestDTO.builder()
-                .type(FileType.APPLICATION_FORM.toString())
-                .name(clubApplicationRequestDTO.getFileName())
-                .content(clubApplicationRequestDTO.getFileContent())
-                .build();
-        FileResponseDTO fileResponse = fileService.upload(loginMember, uploadRequest);
-        File applicantForm = File.builder()
-                .name(fileResponse.getName())
-                .type(FileType.APPLICATION_FORM)
-                .content(fileResponse.getContent())
-                .uploader(loginMember)
-                .build();
-
+        ClubApplicationFormFileProperty file = (ClubApplicationFormFileProperty) FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
+        file.setClub(club);
         clubApplicantService.save(
                 ClubApplicant.builder()
                         .club(club)
                         .applicant(loginMember)
-                        .applicationForm(applicantForm)
+                        .applicationForm(file)
                         .build()
         );
 
         return ClubApplicationResponseDTO.builder()
                 .code(loginMember.getCode())
                 .name(loginMember.getName())
-                .applicationForm(applicantForm)
+                .applicationForm(file)
                 .build();
     }
 
