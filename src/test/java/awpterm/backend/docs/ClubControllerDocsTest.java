@@ -1,6 +1,7 @@
 package awpterm.backend.docs;
 
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
+import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.controller.ClubController;
@@ -8,9 +9,11 @@ import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMaster;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.*;
+import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.ClubServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -129,8 +132,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
 
         ClubApplicationRequestDTO request = ClubApplicationRequestDTO.builder()
                 .clubId(1L)
-                .fileName(null)
-                .fileContent(null)
+                .multipartFile(null)
                 .build();
 
         ClubApplicationResponseDTO response = ClubApplicationResponseDTO.builder()
@@ -139,9 +141,12 @@ public class ClubControllerDocsTest extends RestDocsTest {
                                         .applicationForm(null)
                                                 .build();
 
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, new Member());
         given(clubServiceFacade.apply(requestor, request)).willReturn(response);
         mockMvc.perform(post("/club/application")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .session(session)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -13,7 +13,6 @@ import java.util.UUID;
 @Setter
 @Entity
 @SuperBuilder
-@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileProperty extends BaseEntity {

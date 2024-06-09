@@ -13,7 +13,7 @@ include::{snippets}/club-register-wrong/http-response.adoc[]
 ==== 요청
 include::{snippets}/club-application/http-request.adoc[]
 
-==== 응답 (200으로 취급해주길 바람, 세션 이슈)
+==== 응답
 include::{snippets}/club-application/http-response.adoc[]
 
 === 동아리 리스트
