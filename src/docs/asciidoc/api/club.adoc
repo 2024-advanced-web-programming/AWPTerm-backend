@@ -40,3 +40,25 @@ include::{snippets}/club-dismiss/http-request.adoc[]
 ==== 응답
 include::{snippets}/club-dismiss/http-response.adoc[]
 
+=== 동아리 승인
+==== 정상 요청
+include::{snippets}/club-updateStatus-accept-success/http-request.adoc[]
+==== 응답
+include::{snippets}/club-updateStatus-accept-success/http-response.adoc[]
+
+==== 비정상 요청
+include::{snippets}/club-updateStatus-accept-fail/http-request.adoc[]
+==== 응답
+include::{snippets}/club-updateStatus-accept-fail/http-response.adoc[]
+
+=== 동아리 거절
+==== 정상 요청
+include::{snippets}/club-updateStatus-reject-success/http-request.adoc[]
+==== 응답
+include::{snippets}/club-updateStatus-reject-success/http-response.adoc[]
+
+==== 비정상 요청
+include::{snippets}/club-updateStatus-reject-fail/http-request.adoc[]
+==== 응답
+include::{snippets}/club-updateStatus-reject-fail/http-response.adoc[]
+

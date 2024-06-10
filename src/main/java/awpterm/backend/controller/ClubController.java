@@ -60,4 +60,13 @@ public class ClubController {
         clubServiceFacade.clubMemberDelete(clubId, memberId);
         return ApiResponse.response(HttpStatus.OK, null);
     }
+
+    //동아리 승인 및 거절
+    @PutMapping("/updateStatus")
+    public ResponseEntity<?> updateClubStatus(@RequestParam Long clubId, @RequestParam String status) {
+        if(!clubServiceFacade.updateStatus(clubId, status)) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, Boolean.FALSE);
+        }
+        return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
+    }
 }

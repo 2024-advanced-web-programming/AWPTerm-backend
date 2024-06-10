@@ -108,4 +108,7 @@ public class ClubServiceFacade {
                     .build());
         }
     }
+    public boolean updateStatus(Long id, String status) {
+        return clubService.updateStatus(id, status);
+    }
 }

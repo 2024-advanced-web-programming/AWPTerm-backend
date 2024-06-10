@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseBody;
@@ -93,8 +94,8 @@ public class ClubControllerDocsTest extends RestDocsTest {
 
         given(clubServiceFacade.register(request)).willReturn(response);
         mockMvc.perform(post("/club/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andDo(document("club-register-wrong",
@@ -136,10 +137,10 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .build();
 
         ClubApplicationResponseDTO response = ClubApplicationResponseDTO.builder()
-                        .code(requestor.getCode())
-                                .name(requestor.getName())
-                                        .applicationForm(null)
-                                                .build();
+                .code(requestor.getCode())
+                .name(requestor.getName())
+                .applicationForm(null)
+                .build();
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, new Member());
@@ -202,10 +203,10 @@ public class ClubControllerDocsTest extends RestDocsTest {
     @Test
     void 동아리_신청_결정_테스트() throws Exception {
         ClubApplicationDecisionDTO request = ClubApplicationDecisionDTO.builder()
-                        .clubId(1L)
-                        .memberId("testId")
-                        .isApproval(true)
-                        .build();
+                .clubId(1L)
+                .memberId("testId")
+                .isApproval(true)
+                .build();
 
         mockMvc.perform(post("/club/application/decision")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -231,6 +232,122 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("club-dismiss",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+    @Test
+    void 동아리_신청_승인() throws Exception {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("clubId", "1");
+        params.add("status", Status.승인.toString());
+
+        Member supervisor1 = Member.builder()
+                .name("testReuqestor")
+                .birthDate("20000523")
+                .code("20190001")
+                .phoneNumber("010-1111-1111")
+                .email("testEmail")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.교수)
+                .build();
+
+        Member president1 = Member.builder()
+                .name("testRequestor")
+                .birthDate("20000523")
+                .code("20190001")
+                .phoneNumber("010-1111-2222")
+                .email("testEmail")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Club club = Club.builder()
+                .id(1L)
+                .clubType(ClubType.중앙)
+                .name("testClub")
+                .supervisor(supervisor1)
+                .president(president1)
+                .status(Status.검토)
+                .build();
+
+        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString())).willReturn(true);
+        mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-updateStatus-accept-success",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+
+        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString())).willReturn(false);
+        mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("club-updateStatus-accept-fail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+    }
+    @Test
+    void 동아리_신청_거절() throws Exception {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("clubId", "1");
+        params.add("status", Status.거절.toString());
+
+        Member supervisor1 = Member.builder()
+                .name("testReuqestor")
+                .birthDate("20000523")
+                .code("20190001")
+                .phoneNumber("010-1111-1111")
+                .email("testEmail")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.교수)
+                .build();
+
+        Member president1 = Member.builder()
+                .name("testRequestor")
+                .birthDate("20000523")
+                .code("20190001")
+                .phoneNumber("010-1111-2222")
+                .email("testEmail")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Club club = Club.builder()
+                .id(1L)
+                .clubType(ClubType.중앙)
+                .name("testClub")
+                .supervisor(supervisor1)
+                .president(president1)
+                .status(Status.검토)
+                .build();
+
+        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString())).willReturn(true);
+        mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("club-updateStatus-reject-success",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestBody(),
+                        responseBody()));
+
+        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString())).willReturn(false);
+        mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andDo(document("club-updateStatus-reject-fail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestBody(),

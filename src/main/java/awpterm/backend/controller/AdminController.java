@@ -6,6 +6,7 @@ import awpterm.backend.domain.Club;
 import awpterm.backend.enums.Status;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.AdminService;
+import awpterm.backend.service.AdminServiceFacade;
 import awpterm.backend.service.ClubService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,32 +21,25 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    // TODO 아래와 같이 2개 이상의 종속성이 발생하면 파사드 패턴으로 묶어줄 것
-    private final AdminService adminService;
-    private final ClubService clubService;
+    private final AdminServiceFacade adminServiceFacade;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AdminLoginRequestDTO adminLoginRequestDTO, HttpServletRequest request) {
-        if (!adminService.isValidLoginRequest(adminLoginRequestDTO))
+        if (!adminServiceFacade.isValidLoginRequest(adminLoginRequestDTO))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.");
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_ADMIN, adminService.findById(adminLoginRequestDTO.getId()));
+        session.setAttribute(SessionConst.LOGIN_ADMIN, adminServiceFacade.findById(adminLoginRequestDTO.getId()));
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
 
-    @GetMapping("/checkList")
-    public ResponseEntity<?> checkStatus() {
-        List<Club> clubList = clubService.findByStatus(Status.검토);
-        return ApiResponse.response(HttpStatus.OK, clubList);
-    }
-
-    //TODO 아래 내용은 클럽 API로 옮기는 것이 적절할 듯
-    @PutMapping("/updateStatus")
-    public ResponseEntity<?> updateClubStatus(@RequestParam Long id, @RequestParam String status) {
-        if(!clubService.updateStatus(id, status)) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, Boolean.FALSE);
+    @GetMapping("/checkList/{adminId}")
+    public ResponseEntity<?> checkStatus(@PathVariable String adminId) {
+        if(adminServiceFacade.isAdmin(adminId)) { //관리자 아이디 체크
+            List<Club> clubList = adminServiceFacade.findByStatus(Status.검토);
+            return ApiResponse.response(HttpStatus.OK, clubList);
+        }else {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, "관리자 아이디가 아닙니다.");
         }
-        return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
 }

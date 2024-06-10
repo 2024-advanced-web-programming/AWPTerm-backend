@@ -13,6 +13,10 @@ endif::[]
 == Member API
 include::api/member.adoc[]
 
+[[Admin-API]]
+== Admin API
+include::api/admin.adoc[]
+
 [[Club-API]]
 == Club API
 include::api/club.adoc[]

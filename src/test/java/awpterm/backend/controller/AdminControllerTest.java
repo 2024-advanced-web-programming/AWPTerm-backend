@@ -8,7 +8,7 @@ import awpterm.backend.enums.Major;
 import awpterm.backend.enums.Status;
 import awpterm.backend.repository.AdminRepository;
 import awpterm.backend.repository.ClubRepository;
-import awpterm.backend.service.AdminService;
+import awpterm.backend.service.AdminServiceFacade;
 import awpterm.backend.service.ClubService;
 import awpterm.backend.service.ClubServiceFacade;
 import jakarta.transaction.Transactional;
@@ -19,13 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class AdminControllerTest {
     @Autowired
-    private AdminService adminService;
+    private AdminServiceFacade adminServiceFacade;
     @Autowired
     private ClubService clubService;
     @Autowired
@@ -74,7 +73,7 @@ class AdminControllerTest {
         Club club = clubServiceFacade.register(req1); //저장
         Club club1 = clubServiceFacade.register(req2); // 저장
 
-        if(adminService.isAdmin(admin.getId())) {
+        if(adminServiceFacade.isAdmin(admin.getId())) {
             List<Club> clubList = clubService.findByStatus(Status.검토);
             assertThat(club).isEqualTo(clubList.get(0));
             assertThat(club1).isEqualTo(clubList.get(1));
