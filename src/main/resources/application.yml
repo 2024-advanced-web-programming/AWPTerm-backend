@@ -18,3 +18,8 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     database: mysql
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+      timeout: 30m
