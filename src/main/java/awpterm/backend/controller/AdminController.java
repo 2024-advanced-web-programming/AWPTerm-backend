@@ -32,7 +32,7 @@ public class AdminController {
         session.setAttribute(SessionConst.LOGIN_ADMIN, adminServiceFacade.findById(adminLoginRequestDTO.getId()));
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
-
+    //TODO PathVariable -> Session으로 변경 [MemberController 참고]
     @GetMapping("/checkList/{adminId}")
     public ResponseEntity<?> checkStatus(@PathVariable String adminId) {
         if(adminServiceFacade.isAdmin(adminId)) { //관리자 아이디 체크
@@ -41,5 +41,14 @@ public class AdminController {
         }else {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "관리자 아이디가 아닙니다.");
         }
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return ApiResponse.response(HttpStatus.OK, null);
     }
 }
