@@ -8,6 +8,7 @@ import awpterm.backend.enums.Gender;
 import awpterm.backend.enums.Major;
 import awpterm.backend.enums.Position;
 import awpterm.backend.service.MemberService;
+import awpterm.backend.service.MemberServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -26,11 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MemberControllerDocsTest extends RestDocsTest {
-    private final MemberService memberService = mock(MemberService.class);
+    private final MemberServiceFacade memberServiceFacade = mock(MemberServiceFacade.class);
 
     @Override
     protected Object initController() {
-        return new MemberController(memberService);
+        return new MemberController(memberServiceFacade);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class MemberControllerDocsTest extends RestDocsTest {
                 .position(position)
                 .build();
 
-        given(memberService.register(any(MemberRegisterRequestDTO.class)))
+        given(memberServiceFacade.register(any(MemberRegisterRequestDTO.class)))
                 .willReturn(MemberResponseDTO.builder()
                         .name(name)
                         .birthDate(brithDate)
@@ -95,8 +96,8 @@ public class MemberControllerDocsTest extends RestDocsTest {
                 .password("wrongPassword")
                 .build();
 
-        given(memberService.isValidLoginRequest(request1)).willReturn(true);
-        given(memberService.isValidLoginRequest(request2)).willReturn(false);
+        given(memberServiceFacade.isValidLoginRequest(request1)).willReturn(true);
+        given(memberServiceFacade.isValidLoginRequest(request2)).willReturn(false);
 
         mockMvc.perform(post("/member/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -155,7 +156,7 @@ public class MemberControllerDocsTest extends RestDocsTest {
                 .position(Position.교수.toString())
                 .build());
 
-        given(memberService.findByPosition(Position.교수))
+        given(memberServiceFacade.findByPosition(Position.교수))
                 .willReturn(교수님들);
 
         mockMvc.perform(get("/member/professors"))

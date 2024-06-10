@@ -4,9 +4,10 @@ import awpterm.backend.api.kakao.KakaoAPI;
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import awpterm.backend.etc.SessionConst;
-import awpterm.backend.service.MemberService;
+import awpterm.backend.service.MemberServiceFacade;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,15 @@ import java.util.HashMap;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceFacade memberServiceFacade;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO, HttpServletRequest request) {
-        if (!memberService.isValidLoginRequest(memberLoginRequestDTO))
+        if (!memberServiceFacade.isValidLoginRequest(memberLoginRequestDTO))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.");
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, memberService.findById(memberLoginRequestDTO.getId()));
+        session.setAttribute(SessionConst.LOGIN_MEMBER, memberServiceFacade.findById(memberLoginRequestDTO.getId()));
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
 
@@ -44,15 +45,15 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody MemberRegisterRequestDTO memberRegisterRequestDTO) {
-        return ApiResponse.response(HttpStatus.CREATED, memberService.register(memberRegisterRequestDTO));
+        return ApiResponse.response(HttpStatus.CREATED, memberServiceFacade.register(memberRegisterRequestDTO));
     }
 
 
     @PostMapping("/kakao/login")
     public ResponseEntity<?> kakaoLogin(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO) {
-        if (!memberService.isValidMemberById(memberLoginRequestDTO.getId()))
+        if (!memberServiceFacade.isValidMemberById(memberLoginRequestDTO.getId()))
             return ApiResponse.response(HttpStatus.UNPROCESSABLE_ENTITY, "카카오 회원이 현재 존재하지 않습니다.");
-        if (!memberService.isValidLoginRequest(memberLoginRequestDTO))
+        if (!memberServiceFacade.isValidLoginRequest(memberLoginRequestDTO))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다.");
 
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
@@ -72,6 +73,11 @@ public class MemberController {
 
     @GetMapping("/professors")
     public ResponseEntity<?> professors() {
-        return ApiResponse.response(HttpStatus.OK, memberService.findByPosition(Position.교수));
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findByPosition(Position.교수));
+    }
+    
+    @GetMapping("/applied/clubs")
+    public ResponseEntity<?> appliedClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubApplicantByMember(loginMember));
     }
 }

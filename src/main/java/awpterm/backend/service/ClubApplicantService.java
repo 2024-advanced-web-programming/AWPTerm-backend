@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -16,6 +18,10 @@ public class ClubApplicantService {
 
     public ClubApplicant findByClubAndApplicant(Club club, Member applicant) {
         return clubApplicantRepository.findByClubAndApplicant(club, applicant);
+    }
+
+    public List<ClubApplicant> findByMember(Member applicant) {
+        return clubApplicantRepository.findByApplicant(applicant);
     }
 
     public void save(ClubApplicant clubApplicant) {
