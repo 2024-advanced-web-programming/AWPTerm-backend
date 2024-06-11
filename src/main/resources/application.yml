@@ -11,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -23,3 +23,5 @@ server:
     session:
       tracking-modes: cookie
       timeout: 30m
+      cookie:
+        http-only: false

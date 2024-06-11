@@ -76,9 +76,18 @@ public class MemberController {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findByPosition(Position.교수));
     }
 
-    // TODO : 조회 무한 루프 해결(Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Infinite recursion (StackOverflowError))
     @GetMapping("/applied/clubs")
     public ResponseEntity<?> appliedClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubApplicantByMember(loginMember));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, loginMember.getName());
+    }
+
+    @GetMapping("/clubs")
+    public ResponseEntity<?> findClubByMember(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByMember(loginMember));
     }
 }

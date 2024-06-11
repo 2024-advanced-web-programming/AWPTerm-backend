@@ -31,13 +31,16 @@ public class Club extends BaseEntity {
     private Member secretary;
     @OneToMany(mappedBy = "club")
     @Builder.Default
+    //마스터 권한을 가진 인원
     private List<ClubMaster> masters = new ArrayList<>();
     @OneToMany(mappedBy = "club")
     @Builder.Default
+    //동아리에 소속된 모든 인원(마스터 권한, 대표자 모두 포함)
     private List<ClubMember> members = new ArrayList<>();
     @OneToMany(mappedBy = "club")
     @Builder.Default
     private List<ClubApplicant> applicants = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Embedded
     private ClubDetail clubDetail;

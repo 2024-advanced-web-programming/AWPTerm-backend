@@ -1,6 +1,7 @@
 package awpterm.backend.domain;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class ClubDetail {
     private String introduction;
     private String history;
-    private Byte[] representativePicture;
+    @OneToOne
+    private FileProperty representativePicture;
     private LocalDateTime regularMeetingTime;
 }

@@ -1,7 +1,9 @@
 package awpterm.backend.service;
 
 import awpterm.backend.api.request.club.ClubStatusRequestDTO;
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Status;
 import awpterm.backend.repository.ClubMemberRepository;
 import awpterm.backend.repository.ClubRepository;
@@ -17,9 +19,9 @@ import java.util.List;
 public class ClubService {
     private final ClubRepository clubRepository;
 
-    public Club register(Club club) {
+    public ClubResponseDTO register(Club club) {
         clubRepository.save(club);
-        return clubRepository.findById(club.getId()).orElse(null);
+        return ClubResponseDTO.valueOf(clubRepository.findById(club.getId()).orElse(null));
     }
 
     public Club findById(Long id) {
@@ -36,5 +38,9 @@ public class ClubService {
         }
         club.setStatus(Status.valueOf(status));
         return true;
+    }
+
+    public List<ClubResponseDTO> findAll() {
+        return clubRepository.findAll().stream().map(ClubResponseDTO::valueOf).toList();
     }
 }

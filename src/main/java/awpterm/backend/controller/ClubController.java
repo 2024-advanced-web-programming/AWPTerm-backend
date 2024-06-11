@@ -21,8 +21,6 @@ public class ClubController {
     //TODO 관리 기능은 Member 중에서도 마스터 권한을 지녀야만 접근 가능해야함 인터셉터로 처리할 것
     private final ClubServiceFacade clubServiceFacade;
 
-    // TODO : 응답 무한루프 해결(아마 조회랑 비슷한 이유일듯)
-    // TODO : 중간 테이블이 아닌 CLUB 테이블에 정보가 삽입 되는 상태 수정
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody ClubRegisterRequestDTO clubRegisterRequestDTO) {
         if (!clubServiceFacade.isValidMemberByCode(clubRegisterRequestDTO.getRequestorCode()))
@@ -70,5 +68,10 @@ public class ClubController {
             return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, Boolean.FALSE);
         }
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllClubs() {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findAll());
     }
 }

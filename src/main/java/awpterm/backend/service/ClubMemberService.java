@@ -1,5 +1,6 @@
 package awpterm.backend.service;
 
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMember;
 import awpterm.backend.domain.Member;
@@ -7,6 +8,8 @@ import awpterm.backend.repository.ClubMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +27,9 @@ public class ClubMemberService {
 
     public void save(ClubMember clubMember) {
         clubMemberRepository.save(clubMember);
+    }
+
+    public List<ClubResponseDTO> findByMember(Member member) {
+        return clubMemberRepository.findByMember(member).stream().map(ClubResponseDTO::valueOf).toList();
     }
 }

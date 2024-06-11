@@ -1,5 +1,6 @@
 package awpterm.backend.service;
 
+import awpterm.backend.api.response.club.ClubApplicantResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubApplicant;
 import awpterm.backend.domain.Member;
@@ -20,8 +21,8 @@ public class ClubApplicantService {
         return clubApplicantRepository.findByClubAndApplicant(club, applicant);
     }
 
-    public List<ClubApplicant> findByMember(Member applicant) {
-        return clubApplicantRepository.findByApplicant(applicant);
+    public List<ClubApplicantResponseDTO> findByMember(Member applicant) {
+        return clubApplicantRepository.findByApplicant(applicant).stream().map(ClubApplicantResponseDTO::valueOf).toList();
     }
 
     public void save(ClubApplicant clubApplicant) {
