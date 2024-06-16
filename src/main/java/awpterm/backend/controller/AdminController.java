@@ -2,6 +2,7 @@ package awpterm.backend.controller;
 
 import awpterm.backend.api.request.admin.AdminLoginRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.domain.Admin;
 import awpterm.backend.domain.Club;
 import awpterm.backend.enums.Status;
 import awpterm.backend.etc.SessionConst;
@@ -32,10 +33,9 @@ public class AdminController {
         session.setAttribute(SessionConst.LOGIN_ADMIN, adminServiceFacade.findById(adminLoginRequestDTO.getId()));
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);
     }
-    //TODO PathVariable -> Session으로 변경 [MemberController 참고]
     @GetMapping("/checkList/{adminId}")
-    public ResponseEntity<?> checkStatus(@PathVariable String adminId) {
-        if(adminServiceFacade.isAdmin(adminId)) { //관리자 아이디 체크
+    public ResponseEntity<?> checkStatus(@SessionAttribute(name = SessionConst.LOGIN_ADMIN) Admin admin) {
+        if(adminServiceFacade.isAdmin(admin.getId())) { //관리자 아이디 체크
             List<Club> clubList = adminServiceFacade.findByStatus(Status.검토);
             return ApiResponse.response(HttpStatus.OK, clubList);
         }else {

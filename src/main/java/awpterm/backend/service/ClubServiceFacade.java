@@ -113,8 +113,8 @@ public class ClubServiceFacade {
                     .build());
         }
     }
-    public boolean updateStatus(Long id, String status) {
-        return clubService.updateStatus(id, status);
+    public boolean updateStatus(Long id, String status, String rejectReason) {
+        return clubService.updateStatus(id, status, rejectReason);
     }
 
     public List<ClubResponseDTO> findAll() {

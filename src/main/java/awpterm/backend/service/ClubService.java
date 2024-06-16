@@ -31,12 +31,15 @@ public class ClubService {
     public List<Club> findByStatus(Status status) {
         return clubRepository.findByStatus(status);
     }
-    public boolean updateStatus(Long id, String status) {
+    public boolean updateStatus(Long id, String status, String rejectReason) {
         Club club = clubRepository.findById(id).orElse(null);
         if(club == null) { //club을 찾을 수 없는 경우
             return false;
         }
         club.setStatus(Status.valueOf(status));
+        if(rejectReason != null) {
+            club.setRejectReason(rejectReason);
+        }
         return true;
     }
 

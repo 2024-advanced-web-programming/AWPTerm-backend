@@ -4,6 +4,7 @@ import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.controller.ClubController;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMaster;
@@ -83,13 +84,11 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .master(president)
                 .build());
 
-        Club response = Club.builder()
-                .clubType(ClubType.중앙)
+        ClubResponseDTO response = ClubResponseDTO.builder()
+                .id(1L)
+                .clubType(ClubType.중앙.toString())
                 .name("testClub")
-                .supervisor(supervisor)
-                .president(president)
-                .masters(masters)
-                .status(Status.검토)
+                .status(Status.검토.toString())
                 .build();
 
         given(clubServiceFacade.register(request)).willReturn(response);
@@ -274,7 +273,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .status(Status.검토)
                 .build();
 
-        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString())).willReturn(true);
+        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString(), null)).willReturn(true);
         mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andDo(print())
@@ -285,7 +284,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                         requestBody(),
                         responseBody()));
 
-        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString())).willReturn(false);
+        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString(), null)).willReturn(false);
         mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -332,7 +331,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .status(Status.검토)
                 .build();
 
-        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString())).willReturn(true);
+        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString(), "부적절한 이유로 거절되었습니다.")).willReturn(true);
         mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andDo(print())
@@ -343,7 +342,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                         requestBody(),
                         responseBody()));
 
-        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString())).willReturn(false);
+        given(clubServiceFacade.updateStatus(club.getId(), Status.거절.toString(), "부적절한 이유로 거절되었습니다.")).willReturn(false);
         mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

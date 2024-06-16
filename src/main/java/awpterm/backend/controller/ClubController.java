@@ -63,8 +63,8 @@ public class ClubController {
 
     //동아리 승인 및 거절
     @PutMapping("/updateStatus")
-    public ResponseEntity<?> updateClubStatus(@RequestParam Long clubId, @RequestParam String status) {
-        if(!clubServiceFacade.updateStatus(clubId, status)) {
+    public ResponseEntity<?> updateClubStatus(@RequestParam Long clubId, @RequestParam String status, @RequestParam String rejectReason) {
+        if(!clubServiceFacade.updateStatus(clubId, status, rejectReason)) {
             return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, Boolean.FALSE);
         }
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);

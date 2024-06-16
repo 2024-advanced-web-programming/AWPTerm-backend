@@ -1,6 +1,7 @@
 package awpterm.backend.controller;
 
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.enums.ClubType;
 import awpterm.backend.enums.Major;
@@ -33,7 +34,7 @@ class ClubControllerTest {
                 .supervisorPhoneNumber("010-2222-2222")
                 .build();
 
-        Club club = clubServiceFacade.register(request);
+        ClubResponseDTO club = clubServiceFacade.register(request);
         Club findClub = clubServiceFacade.findById(club.getId());
 
         assertThat(club).isEqualTo(findClub);

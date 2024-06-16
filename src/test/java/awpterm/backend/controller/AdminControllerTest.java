@@ -1,6 +1,7 @@
 package awpterm.backend.controller;
 
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Admin;
 import awpterm.backend.domain.Club;
 import awpterm.backend.enums.ClubType;
@@ -70,13 +71,13 @@ class AdminControllerTest {
                 .supervisorPhoneNumber("010-3333-3333")
                 .build();
 
-        Club club = clubServiceFacade.register(req1); //저장
-        Club club1 = clubServiceFacade.register(req2); // 저장
+        ClubResponseDTO club = clubServiceFacade.register(req1); //저장
+        ClubResponseDTO club1 = clubServiceFacade.register(req2); // 저장
 
         if(adminServiceFacade.isAdmin(admin.getId())) {
             List<Club> clubList = clubService.findByStatus(Status.검토);
-            assertThat(club).isEqualTo(clubList.get(0));
-            assertThat(club1).isEqualTo(clubList.get(1));
+            assertThat(club.getId()).isEqualTo(clubList.get(0).getId());
+            assertThat(club1.getId()).isEqualTo(clubList.get(1).getId());
         }
     }
     @Test
@@ -93,9 +94,10 @@ class AdminControllerTest {
                 .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
                 .supervisorPhoneNumber("010-2222-2222")
                 .build();
-        Club club = clubServiceFacade.register(req1);
 
-        if(clubService.updateStatus(club.getId(), Status.승인.toString())) {
+        ClubResponseDTO club = clubServiceFacade.register(req1);
+
+        if(clubService.updateStatus(club.getId(), Status.승인.toString(), null)) {
             Club findClub = clubRepository.findById(club.getId()).orElse(null);
             assertThat(findClub.getStatus()).isEqualTo(Status.승인);
         }
@@ -115,9 +117,9 @@ class AdminControllerTest {
                 .supervisorPhoneNumber("010-2222-2222")
                 .build();
 
-        Club club = clubServiceFacade.register(req1);
+        ClubResponseDTO club = clubServiceFacade.register(req1);
 
-        if(clubService.updateStatus(club.getId(), Status.거절.toString())) {
+        if(clubService.updateStatus(club.getId(), Status.거절.toString(), "학번 입력이 잘못되었습니다.")) {
             Club findClub = clubRepository.findById(club.getId()).orElse(null);
             assertThat(findClub.getStatus()).isEqualTo(Status.거절);
         }
