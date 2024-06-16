@@ -78,6 +78,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .major(Major.컴퓨터소프트웨어공학과)
                 .position(Position.교수)
                 .build();
+
         List<ClubMaster> masters = new ArrayList<>();
         masters.add(ClubMaster.builder()
                 .club(request.toEntity())

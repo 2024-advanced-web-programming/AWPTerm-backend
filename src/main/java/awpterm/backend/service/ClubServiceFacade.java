@@ -2,14 +2,17 @@ package awpterm.backend.service;
 
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
+import awpterm.backend.api.request.club.ClubBasicInfoDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
+import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class ClubServiceFacade {
     private final ClubApplicantService clubApplicantService;
     private final MemberService memberService;
     private final FilePropertyService filePropertyService;
+    private final ClubRepository clubRepository;
 
     public boolean isValidMemberById(String memberId) {
         return memberService.isValidMemberById(memberId);
@@ -119,5 +123,9 @@ public class ClubServiceFacade {
 
     public List<ClubResponseDTO> findAll() {
         return clubService.findAll();
+    }
+
+    public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
+        return clubService.updateBasicInfo(clubBasicInfoDTO, representativePicture);
     }
 }

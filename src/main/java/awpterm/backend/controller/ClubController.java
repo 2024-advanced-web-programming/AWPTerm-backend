@@ -2,6 +2,7 @@ package awpterm.backend.controller;
 
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
+import awpterm.backend.api.request.club.ClubBasicInfoDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
 import awpterm.backend.domain.Member;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -73,5 +75,11 @@ public class ClubController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllClubs() {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findAll());
+    }
+
+    @PutMapping( "/basicInfo") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식
+    public ResponseEntity<?> clubInfo(@RequestPart("data") ClubBasicInfoDTO clubBasicInfoDTO,
+                                      @RequestPart(value = "image", required = false) MultipartFile representativePicture) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.updateBasicInfo(clubBasicInfoDTO, representativePicture));
     }
 }
