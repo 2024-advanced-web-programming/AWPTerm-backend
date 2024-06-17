@@ -1,20 +1,19 @@
 package awpterm.backend.service;
 
 import awpterm.backend.api.request.club.ClubBasicInfoDTO;
-import awpterm.backend.api.request.club.ClubStatusRequestDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubDetail;
 import awpterm.backend.domain.FileProperty;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Status;
-import awpterm.backend.repository.ClubMemberRepository;
 import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -23,7 +22,7 @@ import java.util.List;
 public class ClubService {
     private final ClubRepository clubRepository;
 
-    public ClubResponseDTO register(Club club) {
+    public ClubResponseDTO register(Club club) throws MalformedURLException {
         clubRepository.save(club);
         return ClubResponseDTO.valueOf(clubRepository.findById(club.getId()).orElse(null));
     }
@@ -48,7 +47,13 @@ public class ClubService {
     }
 
     public List<ClubResponseDTO> findAll() {
-        return clubRepository.findAll().stream().map(ClubResponseDTO::valueOf).toList();
+        return clubRepository.findAll().stream().map(c -> {
+            try {
+                return ClubResponseDTO.valueOf(c);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
     }
 
     public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
@@ -80,5 +85,15 @@ public class ClubService {
         club.setMembers(clubBasicInfoDTO.getMembers());
 
         return club;
+    }
+
+    public List<ClubResponseDTO> findClubByCreatedBy(Member member) {
+        return clubRepository.findByCreatedBy(member).stream().map(c -> {
+            try {
+                return ClubResponseDTO.valueOf(c);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
     }
 }

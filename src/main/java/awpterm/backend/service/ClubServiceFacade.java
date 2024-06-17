@@ -8,14 +8,13 @@ import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
-import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -37,7 +36,7 @@ public class ClubServiceFacade {
         return memberService.isValidMemberByCode(memberCode);
     }
 
-    public ClubResponseDTO register(ClubRegisterRequestDTO clubRegisterRequestDTO) {
+    public ClubResponseDTO register(ClubRegisterRequestDTO clubRegisterRequestDTO) throws MalformedURLException {
         Club club = clubRegisterRequestDTO.toEntity();
         Member president = memberService.findByCode(clubRegisterRequestDTO.getRequestorCode());
         Member supervisor = memberService.findByCode(clubRegisterRequestDTO.getSupervisorCode());
@@ -48,6 +47,7 @@ public class ClubServiceFacade {
         club.setSupervisor(supervisor);
         club.getMasters().add(clubMaster);
         club.setStatus(Status.검토);
+        club.setCreatedBy(president);
 
         clubMasterService.save(clubMaster);
         clubMemberService.save(clubMember);

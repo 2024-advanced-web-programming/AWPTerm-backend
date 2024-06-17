@@ -45,4 +45,6 @@ public class Club extends BaseEntity {
     private String rejectReason = ""; //거절 사유
     @Embedded
     private ClubDetail clubDetail;
+    @OneToOne
+    private Member createdBy;
 }

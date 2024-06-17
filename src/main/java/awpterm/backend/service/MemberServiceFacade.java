@@ -5,7 +5,6 @@ import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicantResponseDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.api.response.member.MemberResponseDTO;
-import awpterm.backend.domain.ClubApplicant;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import java.util.List;
 @Transactional
 public class MemberServiceFacade {
     private final MemberService memberService;
+    private final ClubService clubService;
     private final ClubMemberService clubMemberService;
     private final ClubApplicantService clubApplicantService;
 
@@ -56,5 +56,9 @@ public class MemberServiceFacade {
 
     public List<ClubResponseDTO> findClubByMember(Member loginMember) {
         return clubMemberService.findByMember(loginMember);
+    }
+
+    public List<ClubResponseDTO> findClubByCreatedBy(Member member) {
+        return clubService.findClubByCreatedBy(member);
     }
 }

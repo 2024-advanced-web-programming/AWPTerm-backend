@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/club")
@@ -30,7 +31,11 @@ public class ClubController {
         if (!clubServiceFacade.isValidMemberByCode(clubRegisterRequestDTO.getSupervisorCode()))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 코드가 잘못 입력되었습니다.");
 
-        return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
+        try {
+            return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
+        } catch (MalformedURLException e) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, "UrlResource 생성 실패");
+        }
     }
 
     @PostMapping("/application")

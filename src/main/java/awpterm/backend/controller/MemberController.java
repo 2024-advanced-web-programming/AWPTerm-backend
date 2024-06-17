@@ -82,6 +82,11 @@ public class MemberController {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubApplicantByMember(loginMember));
     }
 
+    @GetMapping("/registered/clubs")
+    public ResponseEntity<?> registeredClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByCreatedBy(loginMember));
+    }
+
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         return ApiResponse.response(HttpStatus.OK, MemberResponseDTO.valueOf(loginMember));
