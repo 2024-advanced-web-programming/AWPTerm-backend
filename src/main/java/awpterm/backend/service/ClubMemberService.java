@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -30,6 +31,12 @@ public class ClubMemberService {
     }
 
     public List<ClubResponseDTO> findByMember(Member member) {
-        return clubMemberRepository.findByMember(member).stream().map(ClubResponseDTO::valueOf).toList();
+        return clubMemberRepository.findByMember(member).stream().map(c -> {
+            try {
+                return ClubResponseDTO.valueOf(c);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
     }
 }
