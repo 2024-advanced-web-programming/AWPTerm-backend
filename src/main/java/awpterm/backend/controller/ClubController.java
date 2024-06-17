@@ -51,6 +51,11 @@ public class ClubController {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(clubId));
     }
 
+    @GetMapping("/application/list/me")
+    public ResponseEntity<?> applicationList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(loginMember));
+    }
+
     @PostMapping("/application/decision")
     public ResponseEntity<?> applicationDecision(@RequestBody ClubApplicationDecisionDTO clubApplicationDecisionDTO) {
         clubServiceFacade.applicationDecision(clubApplicationDecisionDTO);

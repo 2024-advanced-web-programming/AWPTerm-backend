@@ -28,7 +28,6 @@ public class ClubServiceFacade {
     private final ClubApplicantService clubApplicantService;
     private final MemberService memberService;
     private final FilePropertyService filePropertyService;
-    private final ClubRepository clubRepository;
 
     public boolean isValidMemberById(String memberId) {
         return memberService.isValidMemberById(memberId);
@@ -64,35 +63,23 @@ public class ClubServiceFacade {
         filePropertyService.storeFile(clubApplicationRequestDTO.getMultipartFile());
 
         FileProperty file = FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
-        clubApplicantService.save(
-                ClubApplicant.builder()
-                        .club(club)
-                        .applicant(loginMember)
-                        .applicationForm(file)
-                        .build()
-        );
+        ClubApplicant clubApplicant = ClubApplicant.builder()
+                                        .club(club)
+                                        .applicant(loginMember)
+                                        .applicationForm(file)
+                                        .build();
+        clubApplicantService.save(clubApplicant);
 
-        return ClubApplicationResponseDTO.builder()
-                .code(loginMember.getCode())
-                .name(loginMember.getName())
-                .applicationForm(file)
-                .build();
+        return ClubApplicationResponseDTO.valueOf(clubApplicant);
     }
 
     public List<ClubApplicationResponseDTO> getApplicationList(Long clubId) {
-        Club club = clubService.findById(clubId);
-        List<ClubApplicant> clubApplicants = club.getApplicants();
-        List<ClubApplicationResponseDTO> response = new ArrayList<>();
+        Club club = findById(clubId);
+        return club.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
+    }
 
-        for (ClubApplicant a : clubApplicants) {
-            response.add(ClubApplicationResponseDTO.builder()
-                    .code(a.getApplicant().getCode())
-                    .name(a.getApplicant().getName())
-                    .applicationForm(a.getApplicationForm())
-                    .build());
-        }
-
-        return response;
+    public List<ClubApplicationResponseDTO> getApplicationList(Member member) {
+        return member.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
     }
 
 
