@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 
 @RestController
@@ -77,6 +78,11 @@ public class MemberController {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findByPosition(Position.교수));
     }
 
+    @GetMapping("/clubs")
+    public ResponseEntity<?> findClubByMember(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByMember(loginMember));
+    }
+
     @GetMapping("/applied/clubs")
     public ResponseEntity<?> appliedClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubApplicantByMember(loginMember));
@@ -87,13 +93,17 @@ public class MemberController {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByCreatedBy(loginMember));
     }
 
+    @GetMapping("/president/clubs")
+    public ResponseEntity<?> presidentClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        try {
+            return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByPresident(loginMember));
+        } catch (MalformedURLException e) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.toString());
+        }
+    }
+
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         return ApiResponse.response(HttpStatus.OK, MemberResponseDTO.valueOf(loginMember));
-    }
-
-    @GetMapping("/clubs")
-    public ResponseEntity<?> findClubByMember(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
-        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByMember(loginMember));
     }
 }

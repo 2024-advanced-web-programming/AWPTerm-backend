@@ -96,4 +96,8 @@ public class ClubService {
             }
         }).toList();
     }
+
+    public ClubResponseDTO findClubByPresident(Member member) throws MalformedURLException {
+        return ClubResponseDTO.valueOf(clubRepository.findByPresident(member));
+    }
 }

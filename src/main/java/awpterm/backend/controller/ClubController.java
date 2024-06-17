@@ -34,7 +34,7 @@ public class ClubController {
         try {
             return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
         } catch (MalformedURLException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, "UrlResource 생성 실패");
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.toString());
         }
     }
 

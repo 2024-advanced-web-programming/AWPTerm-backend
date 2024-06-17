@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -60,5 +61,9 @@ public class MemberServiceFacade {
 
     public List<ClubResponseDTO> findClubByCreatedBy(Member member) {
         return clubService.findClubByCreatedBy(member);
+    }
+
+    public ClubResponseDTO findClubByPresident(Member member) throws MalformedURLException {
+        return clubService.findClubByPresident(member);
     }
 }

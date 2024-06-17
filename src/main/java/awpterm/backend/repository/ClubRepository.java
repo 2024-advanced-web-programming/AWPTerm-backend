@@ -11,4 +11,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     Club findByName(String name);
     List<Club> findByStatus(Status status);
     List<Club> findByCreatedBy(Member createdBy);
+    Club findByPresident(Member president);
 }
