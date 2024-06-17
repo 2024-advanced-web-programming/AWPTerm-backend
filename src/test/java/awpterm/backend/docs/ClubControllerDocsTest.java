@@ -242,6 +242,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("clubId", "1");
         params.add("status", Status.승인.toString());
+        params.add("rejectReason", "");
 
         Member supervisor1 = Member.builder()
                 .name("testReuqestor")
@@ -274,7 +275,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .status(Status.검토)
                 .build();
 
-        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString(), null)).willReturn(true);
+        given(clubServiceFacade.updateStatus(club.getId(), Status.승인.toString(), "")).willReturn(true);
         mockMvc.perform(put("/club/updateStatus").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andDo(print())
@@ -300,6 +301,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("clubId", "1");
         params.add("status", Status.거절.toString());
+        params.add("rejectReason", "부적절한 이유로 거절되었습니다.");
 
         Member supervisor1 = Member.builder()
                 .name("testReuqestor")

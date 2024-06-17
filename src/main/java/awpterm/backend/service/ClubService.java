@@ -42,9 +42,8 @@ public class ClubService {
             return false;
         }
         club.setStatus(Status.valueOf(status));
-        if (rejectReason != null) {
-            club.setRejectReason(rejectReason);
-        }
+        club.setRejectReason(rejectReason);
+
         return true;
     }
 
@@ -58,7 +57,7 @@ public class ClubService {
         if (club == null) {
             return null;
         }
-        if(representativePicture == null) {
+        if (representativePicture == null) {
             club.setClubDetail(ClubDetail.builder()
                     .introduction(clubBasicInfoDTO.getIntroduce())
                     .history(clubBasicInfoDTO.getHistory())
@@ -66,7 +65,7 @@ public class ClubService {
                     .regularMeetingTime(clubBasicInfoDTO.getRegularMeetingTime())
                     .build()
             );
-        }else {
+        } else {
             club.setClubDetail(ClubDetail.builder()
                     .introduction(clubBasicInfoDTO.getIntroduce())
                     .history(clubBasicInfoDTO.getHistory())

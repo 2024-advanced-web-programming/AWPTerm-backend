@@ -7,6 +7,7 @@ import awpterm.backend.domain.Admin;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.*;
+import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.AdminService;
 import awpterm.backend.service.AdminServiceFacade;
 import awpterm.backend.service.ClubServiceFacade;
@@ -176,6 +177,7 @@ public class AdminControllerDocsTest extends RestDocsTest {
         given(adminServiceFacade.isAdmin(admin.getId())).willReturn(true);
         given(adminServiceFacade.findByStatus(Status.검토)).willReturn(clubs);
         mockMvc.perform(get("/admin/checkList/{adminId}", admin.getId())
+                        .sessionAttr(SessionConst.LOGIN_ADMIN, admin)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

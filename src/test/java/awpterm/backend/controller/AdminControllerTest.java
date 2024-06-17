@@ -76,8 +76,9 @@ class AdminControllerTest {
 
         if(adminServiceFacade.isAdmin(admin.getId())) {
             List<Club> clubList = clubService.findByStatus(Status.검토);
-            assertThat(club.getId()).isEqualTo(clubList.get(0).getId());
-            assertThat(club1.getId()).isEqualTo(clubList.get(1).getId());
+            //DB에 테스트 동아리라는 값이 들어가있어서 0 idx를 제외하고 검사
+            assertThat(club.getId()).isEqualTo(clubList.get(1).getId());
+            assertThat(club1.getId()).isEqualTo(clubList.get(2).getId());
         }
     }
     @Test

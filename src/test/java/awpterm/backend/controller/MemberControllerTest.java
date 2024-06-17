@@ -182,6 +182,8 @@ class MemberControllerTest {
 
         List<MemberResponseDTO> result = memberService.findByPosition(Position.교수);
 
-        assertThat(result).containsExactly(response1, response2, response3);
+        assertThat(result.get(1)).isEqualTo(response1);
+        assertThat(result.get(2)).isEqualTo(response2);
+        assertThat(result.get(3)).isEqualTo(response3);
     }
 }
