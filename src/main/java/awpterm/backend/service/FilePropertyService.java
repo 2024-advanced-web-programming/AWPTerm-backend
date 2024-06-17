@@ -66,4 +66,8 @@ public class FilePropertyService {
 
         return Pair.of(contentDisposition, resource);
     }
+
+    public FileProperty findById(Long id) {
+        return filePropertyRepository.findById(id).orElse(null);
+    }
 }
