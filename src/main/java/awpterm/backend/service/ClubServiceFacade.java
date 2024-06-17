@@ -1,10 +1,8 @@
 package awpterm.backend.service;
 
-import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
-import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
-import awpterm.backend.api.request.club.ClubBasicInfoDTO;
-import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
+import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
@@ -114,7 +112,11 @@ public class ClubServiceFacade {
         return clubService.findAll();
     }
 
-    public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
-        return clubService.updateBasicInfo(clubBasicInfoDTO, representativePicture);
+    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
+        return clubService.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile);
+    }
+    public ClubInquiryBasicInfoDTO getClubInfo(Long clubId) {
+        Club club = clubService.findById(clubId);
+        return ClubInquiryBasicInfoDTO.of(club);
     }
 }

@@ -1,6 +1,6 @@
 package awpterm.backend.service;
 
-import awpterm.backend.api.request.club.ClubBasicInfoDTO;
+import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubDetail;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.MalformedURLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -50,35 +50,35 @@ public class ClubService {
         return clubRepository.findAll().stream().map(ClubResponseDTO::valueOf).toList();
     }
 
-    public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
-        Club club = clubRepository.findByName(clubBasicInfoDTO.getName());
+    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
+        Club club = clubRepository.findById(clubUpdateBasicInfoDTO.getId()).orElse(null);
 
-        if (club == null) {
-            return null;
+        if (club == null) { //찾은 게 없다면
+            return false;
         }
         if (representativePicture == null) {
             club.setClubDetail(ClubDetail.builder()
-                    .introduction(clubBasicInfoDTO.getIntroduce())
-                    .history(clubBasicInfoDTO.getHistory())
+                    .introduction(clubUpdateBasicInfoDTO.getIntroduce())
                     .representativePicture(null)
-                    .regularMeetingTime(clubBasicInfoDTO.getRegularMeetingTime())
+                    .registerFile(FileProperty.valueOf(registerFile))
+                    .regularMeetingTime(LocalDateTime.parse(clubUpdateBasicInfoDTO.getRegularMeetingTime()))
                     .build()
             );
         } else {
             club.setClubDetail(ClubDetail.builder()
-                    .introduction(clubBasicInfoDTO.getIntroduce())
-                    .history(clubBasicInfoDTO.getHistory())
+                    .introduction(clubUpdateBasicInfoDTO.getIntroduce())
                     .representativePicture(FileProperty.valueOf(representativePicture))
-                    .regularMeetingTime(clubBasicInfoDTO.getRegularMeetingTime())
+                    .registerFile(FileProperty.valueOf(registerFile))
+                    .regularMeetingTime(LocalDateTime.parse(clubUpdateBasicInfoDTO.getRegularMeetingTime()))
                     .build()
             );
         }
 
-        club.setVicePresident(clubBasicInfoDTO.getVicePresident());
-        club.setSecretary(clubBasicInfoDTO.getSecretary());
-        club.setMembers(clubBasicInfoDTO.getMembers());
+        club.setVicePresident(clubUpdateBasicInfoDTO.getVicePresident());
+        club.setSecretary(clubUpdateBasicInfoDTO.getSecretary());
+        club.setMembers(clubUpdateBasicInfoDTO.getMembers());
 
-        return club;
+        return true;
     }
 
     public List<ClubResponseDTO> findClubByCreatedBy(Member member) {

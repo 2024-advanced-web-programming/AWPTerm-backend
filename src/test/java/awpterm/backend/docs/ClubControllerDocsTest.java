@@ -3,21 +3,25 @@ package awpterm.backend.docs;
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
+import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.controller.ClubController;
-import awpterm.backend.domain.Club;
-import awpterm.backend.domain.ClubMaster;
-import awpterm.backend.domain.Member;
+import awpterm.backend.domain.*;
 import awpterm.backend.enums.*;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.ClubServiceFacade;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -237,6 +241,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                         requestBody(),
                         responseBody()));
     }
+
     @Test
     void 동아리_신청_승인() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -296,6 +301,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                         requestBody(),
                         responseBody()));
     }
+
     @Test
     void 동아리_신청_거절() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -354,5 +360,174 @@ public class ClubControllerDocsTest extends RestDocsTest {
                         preprocessResponse(prettyPrint()),
                         requestBody(),
                         responseBody()));
+    }
+
+    @Test
+    void 기본_정보_관리() throws Exception { //TODO Docs 작성 마무리
+        ClubRegisterRequestDTO request = ClubRegisterRequestDTO.builder()
+                .clubType(ClubType.중앙.toString())
+                .name("testClub")
+                .requestorCode("20190001")
+                .requestorName("testRequestor")
+                .requestorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .requestorPhoneNumber("010-1111-1111")
+                .supervisorCode("SE0001")
+                .supervisorName("testSuperVisor")
+                .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .supervisorPhoneNumber("010-2222-2222")
+                .build();
+
+        Member president = Member.builder()
+                .name("testRequestor")
+                .birthDate("2000-00-00")
+                .code("20190001")
+                .phoneNumber("010-1111-1111")
+                .email("test@kumoh.ac.kr")
+                .gender(Gender.여자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Member vicePresident = Member.builder()
+                .name("vicePresident")
+                .birthDate("2000-11-11")
+                .code("20190002")
+                .phoneNumber("010-2222-3333")
+                .email("test123@kumoh.ac.kr")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Member secretary = Member.builder()
+                .name("secretary")
+                .birthDate("2000-11-11")
+                .code("20190003")
+                .phoneNumber("010-2222-3333")
+                .email("test123@kumoh.ac.kr")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        List<ClubMember> members = new ArrayList<>();
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(president)
+                .build());
+
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(vicePresident)
+                .build());
+
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(secretary)
+                .build());
+
+
+        ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO = ClubUpdateBasicInfoDTO.builder()
+                .id(1L)
+                .name(request.getName())
+                .introduce("간단한 소개")
+                .regularMeetingTime(LocalDateTime.now().toString())
+                .vicePresident(vicePresident)
+                .secretary(secretary)
+                .members(members)
+                .build();
+
+        String img_name = "image";
+        String img_contentType = "multipart/form-data";
+        String img_path = "test.jpg";
+
+
+        MockMultipartFile representativePicture = new MockMultipartFile(img_name, img_contentType, img_path, img_path.getBytes(StandardCharsets.UTF_8));
+
+        String file_name = "file";
+        String file_contentType = "multipart/form-data";
+        String file_path = "test.text";
+
+        MockMultipartFile registerFile = new MockMultipartFile(file_name, file_contentType, file_path, file_path.getBytes(StandardCharsets.UTF_8));
+
+    }
+
+    @Test
+    void 기본_정보_조회() throws Exception { //TODO Docs 작성 마무리
+
+        ClubRegisterRequestDTO request = ClubRegisterRequestDTO.builder()
+                .clubType(ClubType.중앙.toString())
+                .name("testClub")
+                .requestorCode("20190001")
+                .requestorName("testRequestor")
+                .requestorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .requestorPhoneNumber("010-1111-1111")
+                .supervisorCode("SE0001")
+                .supervisorName("testSuperVisor")
+                .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .supervisorPhoneNumber("010-2222-2222")
+                .build();
+
+        Member president = Member.builder()
+                .name("testRequestor")
+                .birthDate("2000-00-00")
+                .code("20190001")
+                .phoneNumber("010-1111-1111")
+                .email("test@kumoh.ac.kr")
+                .gender(Gender.여자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Member vicePresident = Member.builder()
+                .name("vicePresident")
+                .birthDate("2000-11-11")
+                .code("20190002")
+                .phoneNumber("010-2222-3333")
+                .email("test123@kumoh.ac.kr")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        Member secretary = Member.builder()
+                .name("secretary")
+                .birthDate("2000-11-11")
+                .code("20190003")
+                .phoneNumber("010-2222-3333")
+                .email("test123@kumoh.ac.kr")
+                .gender(Gender.남자)
+                .major(Major.컴퓨터소프트웨어공학과)
+                .position(Position.학생)
+                .build();
+
+        List<ClubMember> members = new ArrayList<>();
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(president)
+                .build());
+
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(vicePresident)
+                .build());
+
+        members.add(ClubMember.builder()
+                .club(request.toEntity())
+                .member(secretary)
+                .build());
+
+        ClubInquiryBasicInfoDTO res = ClubInquiryBasicInfoDTO.builder()
+                .id(1L)
+                .name(request.getName())
+                .introduce("간단한 소개")
+                .regularMeetingTime(LocalDateTime.now())
+                .vicePresident(vicePresident)
+                .secretary(secretary)
+                .members(members)
+                .registerFileId(1L)
+                .representativePictureURL("Image URL")
+                .build();
+
     }
 }

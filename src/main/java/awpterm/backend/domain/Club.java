@@ -42,6 +42,7 @@ public class Club extends BaseEntity {
     private List<ClubApplicant> applicants = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Builder.Default
     private String rejectReason = ""; //거절 사유
     @Embedded
     private ClubDetail clubDetail;
