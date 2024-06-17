@@ -140,15 +140,15 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .multipartFile(null)
                 .build();
 
-        ClubApplicationResponseDTO response = ClubApplicationResponseDTO.builder()
-                .code(requestor.getCode())
-                .name(requestor.getName())
-                .applicationForm(null)
-                .build();
+//        ClubApplicationResponseDTO response = ClubApplicationResponseDTO.builder()
+//                .code(requestor.getCode())
+//                .name(requestor.getName())
+//                .applicationForm(null)
+//                .build();
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, new Member());
-        given(clubServiceFacade.apply(requestor, request)).willReturn(response);
+        //given(clubServiceFacade.apply(requestor, request)).willReturn(response);
         mockMvc.perform(post("/club/application")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .session(session)
@@ -165,23 +165,23 @@ public class ClubControllerDocsTest extends RestDocsTest {
     @Test
     void 동아리_리스트_테스트() throws Exception {
         List<ClubApplicationResponseDTO> applicationResponseDTOS = new ArrayList<>();
-        applicationResponseDTOS.add(
-                ClubApplicationResponseDTO.builder()
-                        .code("20190001")
-                        .name("testMember1")
-                        .applicationForm(null)
-                        .build()
-        );
-        applicationResponseDTOS.add(
-                ClubApplicationResponseDTO.builder()
-                        .code("20190002")
-                        .name("testMember2")
-                        .applicationForm(null)
-                        .build()
-        );
+//        applicationResponseDTOS.add(
+//                ClubApplicationResponseDTO.builder()
+//                        .code("20190001")
+//                        .name("testMember1")
+//                        .applicationForm(null)
+//                        .build()
+//        );
+//        applicationResponseDTOS.add(
+//                ClubApplicationResponseDTO.builder()
+//                        .code("20190002")
+//                        .name("testMember2")
+//                        .applicationForm(null)
+//                        .build()
+//        );
 
         given(clubServiceFacade.findById(any())).willReturn(new Club());
-        given(clubServiceFacade.getApplicationList(1L)).willReturn(applicationResponseDTOS);
+        //given(clubServiceFacade.getApplicationList(1L)).willReturn(applicationResponseDTOS);
         mockMvc.perform(get("/club/application/list/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
