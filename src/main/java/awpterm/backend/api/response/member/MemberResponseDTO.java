@@ -16,7 +16,7 @@ public class MemberResponseDTO {
     private String major;
     private String position;
 
-    public static MemberResponseDTO of(Member member) {
+    public static MemberResponseDTO valueOf(Member member) {
         return MemberResponseDTO.builder()
                 .name(member.getName())
                 .birthDate(member.getBirthDate())

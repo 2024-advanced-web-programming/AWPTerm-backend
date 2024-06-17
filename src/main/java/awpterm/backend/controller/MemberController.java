@@ -4,6 +4,7 @@ import awpterm.backend.api.kakao.KakaoAPI;
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.api.response.member.MemberResponseDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import awpterm.backend.etc.SessionConst;
@@ -83,7 +84,7 @@ public class MemberController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
-        return ApiResponse.response(HttpStatus.OK, loginMember.getName());
+        return ApiResponse.response(HttpStatus.OK, MemberResponseDTO.valueOf(loginMember));
     }
 
     @GetMapping("/clubs")
