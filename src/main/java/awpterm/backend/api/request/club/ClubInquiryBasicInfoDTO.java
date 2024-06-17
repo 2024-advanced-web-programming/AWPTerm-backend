@@ -17,7 +17,8 @@ public class ClubInquiryBasicInfoDTO {
     private String name;
     private String introduce;
     private LocalDateTime regularMeetingTime;
-    private String representativePictureURL;
+    @Builder.Default
+    private String representativePictureURL = "";
     private Long registerFileId;
     private Member vicePresident; // 부대표
     private Member secretary; // 총무
@@ -26,6 +27,19 @@ public class ClubInquiryBasicInfoDTO {
     private List<ClubMember> members = new ArrayList<>();
 
     public static ClubInquiryBasicInfoDTO of(Club club) {
+
+        if (club.getClubDetail().getRepresentativePicture() == null) {
+            return ClubInquiryBasicInfoDTO.builder()
+                    .id(club.getId())
+                    .name(club.getName())
+                    .introduce(club.getClubDetail().getIntroduction())
+                    .regularMeetingTime(club.getClubDetail().getRegularMeetingTime())
+                    .registerFileId(club.getClubDetail().getRegisterFile().getId())
+                    .vicePresident(club.getVicePresident())
+                    .secretary(club.getSecretary())
+                    .members(club.getMembers())
+                    .build();
+        }
 
         return ClubInquiryBasicInfoDTO.builder()
                 .id(club.getId())
@@ -38,5 +52,6 @@ public class ClubInquiryBasicInfoDTO {
                 .secretary(club.getSecretary())
                 .members(club.getMembers())
                 .build();
+
     }
 }
