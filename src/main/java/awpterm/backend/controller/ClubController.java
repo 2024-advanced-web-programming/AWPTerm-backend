@@ -40,7 +40,7 @@ public class ClubController {
 
     @PostMapping("/application")
     public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
-                                         @ModelAttribute ClubApplicationRequestDTO clubApplicationRequestDTO) {
+                                         @RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO) {
         try {
             return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
         } catch (IOException e) {
