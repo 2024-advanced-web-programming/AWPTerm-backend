@@ -4,6 +4,7 @@ import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
+import awpterm.backend.api.response.club.RegisterListResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
 import lombok.RequiredArgsConstructor;
@@ -118,5 +119,9 @@ public class ClubServiceFacade {
     public ClubInquiryBasicInfoDTO getClubInfo(Long clubId) {
         Club club = clubService.findById(clubId);
         return ClubInquiryBasicInfoDTO.of(club);
+    }
+
+    public List<RegisterListResponseDTO> getRegisterList() {
+        return clubService.findByStatus(Status.검토).stream().map(RegisterListResponseDTO::valueOf).toList();
     }
 }

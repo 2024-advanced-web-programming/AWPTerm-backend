@@ -25,7 +25,8 @@ public class AppConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AdminLoginCheckInterceptor())
                 .order(3)
-                .addPathPatterns("/admin/**");
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/login");
     }
 
     @Override

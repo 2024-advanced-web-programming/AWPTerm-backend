@@ -1,9 +1,6 @@
 package awpterm.backend.controller;
 
-import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
-import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
-import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
-import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.ApiResponse;
 import awpterm.backend.domain.Member;
 import awpterm.backend.etc.SessionConst;
@@ -33,6 +30,11 @@ public class ClubController {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 코드가 잘못 입력되었습니다.");
 
         return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
+    }
+
+    @GetMapping("/register/list")
+    public ResponseEntity<?> registerList() {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getRegisterList());
     }
 
     @PostMapping("/application")
@@ -72,8 +74,8 @@ public class ClubController {
 
     //동아리 승인 및 거절
     @PutMapping("/updateStatus")
-    public ResponseEntity<?> updateClubStatus(@RequestParam Long clubId, @RequestParam String status, @RequestParam String rejectReason) {
-        if(!clubServiceFacade.updateStatus(clubId, status, rejectReason)) {
+    public ResponseEntity<?> updateClubStatus(@RequestBody ClubUpdateStatusRequestDTO requestDTO) {
+        if(!clubServiceFacade.updateStatus(requestDTO.getClubId(), requestDTO.getStatus(), requestDTO.getRejectedReason())) {
             return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, Boolean.FALSE);
         }
         return ApiResponse.response(HttpStatus.OK, Boolean.TRUE);

@@ -13,13 +13,11 @@ import lombok.Data;
 public class AdminLoginRequestDTO {
     private String id;
     private String pw;
-    private String name;
 
     public Admin toEntity() {
         return Admin.builder()
                 .id(id)
                 .password(SHA256.encrypt(pw))
-                .name(name)
                 .build();
     }
 
@@ -27,7 +25,6 @@ public class AdminLoginRequestDTO {
         return AdminLoginRequestDTO.builder()
                 .id(admin.getId())
                 .pw(admin.getPassword())
-                .name(admin.getName())
                 .build();
     }
 }
