@@ -1,10 +1,9 @@
 package awpterm.backend.controller;
 
-import awpterm.backend.api.request.club.ClubBasicInfoDTO;
+import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
-import awpterm.backend.domain.ClubMaster;
 import awpterm.backend.domain.ClubMember;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.*;
@@ -12,9 +11,7 @@ import awpterm.backend.service.ClubServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -116,19 +113,35 @@ class ClubControllerTest {
                 .build());
 
 
-        ClubBasicInfoDTO clubBasicInfoDTO = ClubBasicInfoDTO.builder()
+        ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO = ClubUpdateBasicInfoDTO.builder()
                 .name(request.getName())
                 .introduce("간단한 소개")
-                .history("역사 어쩌구..")
                 .regularMeetingTime(LocalDateTime.now())
                 .vicePresident(vicePresident)
                 .secretary(secretary)
                 .members(members)
                 .build();
 
-        Club club = clubServiceFacade.updateBasicInfo(clubBasicInfoDTO, null);
+        ClubUpdateBasicInfoDTO club = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, null);
         assertThat(request.getName()).isEqualTo(club.getName());
         assertThat(vicePresident.getName()).isEqualTo(club.getVicePresident().getName());
         assertThat(secretary.getName()).isEqualTo(club.getSecretary().getName());
+    }
+    @Test
+    void 동아리_기본_정보_조회() {
+        ClubRegisterRequestDTO request = ClubRegisterRequestDTO.builder()
+                .clubType(ClubType.중앙.toString())
+                .name("testClub")
+                .requestorCode("20190001")
+                .requestorName("testRequestor")
+                .requestorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .requestorPhoneNumber("010-1111-1111")
+                .supervisorCode("SE0001")
+                .supervisorName("testSuperVisor")
+                .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
+                .supervisorPhoneNumber("010-2222-2222")
+                .build();
+
+
     }
 }
