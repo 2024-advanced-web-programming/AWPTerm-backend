@@ -5,6 +5,7 @@ import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubDetail;
 import awpterm.backend.domain.FileProperty;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Status;
 import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
@@ -78,5 +79,13 @@ public class ClubService {
         club.setMembers(clubUpdateBasicInfoDTO.getMembers());
 
         return true;
+    }
+
+    public List<ClubResponseDTO> findClubByCreatedBy(Member member) {
+        return clubRepository.findByCreatedBy(member).stream().map(ClubResponseDTO::valueOf).toList();
+    }
+
+    public List<ClubResponseDTO> findClubByPresident(Member member) {
+        return clubRepository.findByPresident(member).stream().map(ClubResponseDTO::valueOf).toList();
     }
 }

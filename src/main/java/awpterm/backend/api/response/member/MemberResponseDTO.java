@@ -1,5 +1,6 @@
 package awpterm.backend.api.response.member;
 
+import awpterm.backend.domain.ClubMember;
 import awpterm.backend.domain.Member;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,22 @@ public class MemberResponseDTO {
     private String major;
     private String position;
 
-    public static MemberResponseDTO of(Member member) {
+    public static MemberResponseDTO valueOf(Member member) {
+        return MemberResponseDTO.builder()
+                .name(member.getName())
+                .birthDate(member.getBirthDate())
+                .code(member.getCode())
+                .phoneNumber(member.getPhoneNumber())
+                .email(member.getEmail())
+                .gender(member.getGender().toString())
+                .major(member.getMajor().toString())
+                .position(member.getPosition().toString())
+                .build();
+    }
+
+    public static MemberResponseDTO valueOf(ClubMember clubMember) {
+        Member member = clubMember.getMember();
+
         return MemberResponseDTO.builder()
                 .name(member.getName())
                 .birthDate(member.getBirthDate())

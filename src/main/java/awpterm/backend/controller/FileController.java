@@ -10,10 +10,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
 
@@ -25,8 +22,9 @@ public class FileController {
     private final FilePropertyService filePropertyService;
 
     @GetMapping("/download/{filePropertyId}")
-    public ResponseEntity<?> download(@ModelAttribute FileProperty fileProperty) {
+    public ResponseEntity<?> download(@PathVariable Long filePropertyId) {
         Pair<String, UrlResource> pair;
+        FileProperty fileProperty = filePropertyService.findById(filePropertyId);
 
         try {
             pair = filePropertyService.download(fileProperty);
