@@ -4,6 +4,7 @@ import awpterm.backend.api.kakao.KakaoAPI;
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.api.response.member.MemberResponseDTO;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import awpterm.backend.etc.SessionConst;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 
 @RestController
@@ -76,18 +78,28 @@ public class MemberController {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findByPosition(Position.교수));
     }
 
+    @GetMapping("/clubs")
+    public ResponseEntity<?> findClubByMember(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByMember(loginMember));
+    }
+
     @GetMapping("/applied/clubs")
     public ResponseEntity<?> appliedClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubApplicantByMember(loginMember));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
-        return ApiResponse.response(HttpStatus.OK, loginMember.getName());
+    @GetMapping("/registered/clubs")
+    public ResponseEntity<?> registeredClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByCreatedBy(loginMember));
     }
 
-    @GetMapping("/clubs")
-    public ResponseEntity<?> findClubByMember(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
-        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByMember(loginMember));
+    @GetMapping("/president/clubs")
+    public ResponseEntity<?> presidentClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByPresident(loginMember));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyInfo(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, MemberResponseDTO.valueOf(loginMember));
     }
 }

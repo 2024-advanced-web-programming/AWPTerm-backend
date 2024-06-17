@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -45,14 +45,15 @@ public class ClubServiceFacade {
         club.setSupervisor(supervisor);
         club.getMasters().add(clubMaster);
         club.setStatus(Status.검토);
+        club.setCreatedBy(president);
 
         clubMasterService.save(clubMaster);
         clubMemberService.save(clubMember);
         return clubService.register(club);
     }
 
-    public Club findById(Long id) {
-        return clubService.findById(id);
+    public ClubResponseDTO findById(Long id) {
+        return ClubResponseDTO.valueOf(clubService.findById(id));
     }
 
     public ClubApplicationResponseDTO apply(Member loginMember, ClubApplicationRequestDTO clubApplicationRequestDTO) throws IOException {
@@ -60,35 +61,25 @@ public class ClubServiceFacade {
         filePropertyService.storeFile(clubApplicationRequestDTO.getMultipartFile());
 
         FileProperty file = FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
-        clubApplicantService.save(
-                ClubApplicant.builder()
-                        .club(club)
-                        .applicant(loginMember)
-                        .applicationForm(file)
-                        .build()
-        );
+        ClubApplicant clubApplicant = ClubApplicant.builder()
+                                        .club(club)
+                                        .applicant(loginMember)
+                                        .applicationForm(file)
+                                        .build();
+        clubApplicantService.save(clubApplicant);
 
-        return ClubApplicationResponseDTO.builder()
-                .code(loginMember.getCode())
-                .name(loginMember.getName())
-                .applicationForm(file)
-                .build();
+        return ClubApplicationResponseDTO.valueOf(clubApplicant);
     }
 
     public List<ClubApplicationResponseDTO> getApplicationList(Long clubId) {
         Club club = clubService.findById(clubId);
-        List<ClubApplicant> clubApplicants = club.getApplicants();
-        List<ClubApplicationResponseDTO> response = new ArrayList<>();
+        return club.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
+    }
 
-        for (ClubApplicant a : clubApplicants) {
-            response.add(ClubApplicationResponseDTO.builder()
-                    .code(a.getApplicant().getCode())
-                    .name(a.getApplicant().getName())
-                    .applicationForm(a.getApplicationForm())
-                    .build());
-        }
-
-        return response;
+    public List<ClubApplicationResponseDTO> getApplicationList(Member member) {
+        //Proxy 정보 초기화
+        member = memberService.findById(member.getId());
+        return member.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
     }
 
 

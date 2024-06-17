@@ -60,17 +60,14 @@ public class FilePropertyService {
     }
 
     public Pair<String, UrlResource> download(FileProperty fileProperty) throws MalformedURLException {
-        String storedFileName = fileProperty.getStoredFileName();
-        String uploadFileName = fileProperty.getUploadFileName();
-
-        UrlResource resource = new UrlResource("file:" + getFullPath(storedFileName));
-        String encodedUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        UrlResource resource = fileProperty.getResource();
+        String encodedUploadFileName = fileProperty.getEncodedUploadFileName(StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
 
         return Pair.of(contentDisposition, resource);
     }
 
-    private String getFullPath(String fileName) {
-        return Config.FILE_ROOT_PATH + fileName;
+    public FileProperty findById(Long id) {
+        return filePropertyRepository.findById(id).orElse(null);
     }
 }

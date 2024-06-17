@@ -10,4 +10,8 @@ import java.util.List;
 
 public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> findByStatus(Status status);
+    List<Club> findByCreatedBy(Member createdBy);
+    @Query("SELECT c FROM Club c")
+    List<Club> findByPresident(Member president);
+    //TODO @Query("SELECT c FROM Club c WHERE c.status = '승인'")로 바꿔야 함 현재는 테스트이므로 전체 SELECT
 }

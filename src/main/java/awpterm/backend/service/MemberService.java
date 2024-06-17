@@ -21,7 +21,7 @@ public class MemberService {
     public MemberResponseDTO register(MemberRegisterRequestDTO memberRegisterRequestDTO) {
         Member member = memberRegisterRequestDTO.toEntity();
         memberRepository.save(member);
-        return MemberResponseDTO.of(member);
+        return MemberResponseDTO.valueOf(member);
     }
 
     public boolean isValidLoginRequest(MemberLoginRequestDTO memberLoginRequestDTO) {
@@ -48,6 +48,6 @@ public class MemberService {
 
     public List<MemberResponseDTO> findByPosition(Position position) {
         List<Member> members = memberRepository.findByPosition(position);
-        return members.stream().map(MemberResponseDTO::of).toList();
+        return members.stream().map(MemberResponseDTO::valueOf).toList();
     }
 }

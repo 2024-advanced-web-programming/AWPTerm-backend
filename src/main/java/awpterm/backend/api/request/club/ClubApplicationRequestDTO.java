@@ -8,5 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class ClubApplicationRequestDTO {
     private Long clubId;
+    private String applicantName;
+    private String applicantCode;
+    private String applicantMajor;
     private MultipartFile multipartFile;
 }

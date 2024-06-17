@@ -3,12 +3,12 @@ package awpterm.backend.domain;
 import awpterm.backend.enums.Gender;
 import awpterm.backend.enums.Major;
 import awpterm.backend.enums.Position;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +30,9 @@ public class Member extends User {
     private Major major;
     @Enumerated(EnumType.STRING)
     private Position position;
+    @OneToMany(mappedBy = "applicant")
+    @Builder.Default
+    private List<ClubApplicant> applicants = new ArrayList<>();
 
     public boolean isSame(Member member) {
         return getId().equals(member.getId()) && getPassword().equals(member.getPassword());

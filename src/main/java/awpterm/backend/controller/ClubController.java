@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/club")
@@ -36,7 +37,7 @@ public class ClubController {
 
     @PostMapping("/application")
     public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
-                                         @ModelAttribute ClubApplicationRequestDTO clubApplicationRequestDTO) {
+                                         @RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO) {
         try {
             return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
         } catch (IOException e) {
@@ -50,6 +51,11 @@ public class ClubController {
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "동아리가 존재하지 않습니다.");
 
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(clubId));
+    }
+
+    @GetMapping("/application/list/me")
+    public ResponseEntity<?> applicationList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(loginMember));
     }
 
     @PostMapping("/application/decision")
@@ -87,5 +93,10 @@ public class ClubController {
     @GetMapping("/inquiryInfo/{clubId}") //동아리 id에 맞는 기본 정보 조회
     public ResponseEntity<?> getClubInfo(@PathVariable Long clubId) {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getClubInfo(clubId));
+    }
+
+    @GetMapping("/{clubId}")
+    public ResponseEntity<?> findById(@PathVariable Long clubId) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findById(clubId));
     }
 }
