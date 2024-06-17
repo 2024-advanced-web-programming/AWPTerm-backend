@@ -18,7 +18,7 @@ public class ClubUpdateBasicInfoDTO { //요청과 응답에 공통적인 DTO로 
     private Long id;
     private String name;
     private String introduce;
-    private LocalDateTime regularMeetingTime;
+    private String regularMeetingTime;
 
     @Nullable
     private Member vicePresident; // 부대표
@@ -34,7 +34,7 @@ public class ClubUpdateBasicInfoDTO { //요청과 응답에 공통적인 DTO로 
                 .id(club.getId())
                 .name(club.getName())
                 .introduce(club.getClubDetail().getIntroduction())
-                .regularMeetingTime(club.getClubDetail().getRegularMeetingTime())
+                .regularMeetingTime(club.getClubDetail().getRegularMeetingTime().toString())
                 .vicePresident(club.getVicePresident())
                 .secretary(club.getSecretary())
                 .members(club.getMembers())

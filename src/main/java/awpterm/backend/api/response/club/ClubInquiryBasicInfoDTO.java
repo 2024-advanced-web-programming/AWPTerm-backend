@@ -1,4 +1,4 @@
-package awpterm.backend.api.request.club;
+package awpterm.backend.api.response.club;
 
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMember;

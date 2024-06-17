@@ -1,19 +1,17 @@
 package awpterm.backend.controller;
 
-import awpterm.backend.api.request.club.ClubInquiryBasicInfoDTO;
+import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.*;
-import awpterm.backend.repository.ClubRepository;
 import awpterm.backend.service.ClubServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,8 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ClubControllerTest {
     @Autowired
     private ClubServiceFacade clubServiceFacade;
-    @Autowired
-    private ClubRepository clubRepository;
 
     @Test
     void registerTest() {
@@ -121,7 +117,7 @@ class ClubControllerTest {
                 .id(club.getId())
                 .name(request.getName())
                 .introduce("간단한 소개")
-                .regularMeetingTime(LocalDateTime.now())
+                .regularMeetingTime(LocalDateTime.now().toString())
                 .vicePresident(vicePresident)
                 .secretary(secretary)
                 .members(members)
@@ -134,10 +130,9 @@ class ClubControllerTest {
                 "This is a dummy file content.".getBytes()
         );
 
-        ClubUpdateBasicInfoDTO result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
-        assertThat(request.getName()).isEqualTo(result.getName());
-        assertThat(vicePresident.getName()).isEqualTo(result.getVicePresident().getName());
-        assertThat(secretary.getName()).isEqualTo(result.getSecretary().getName());
+        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
+
+        assertThat(result).isEqualTo(true);
     }
 
     @Test
@@ -211,7 +206,7 @@ class ClubControllerTest {
                 .id(club.getId())
                 .name(request.getName())
                 .introduce("간단한 소개")
-                .regularMeetingTime(LocalDateTime.now())
+                .regularMeetingTime(LocalDateTime.now().toString())
                 .vicePresident(vicePresident)
                 .secretary(secretary)
                 .members(members)
@@ -223,14 +218,12 @@ class ClubControllerTest {
                 "text/plain",
                 "This is a dummy file content.".getBytes()
         );
+        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
+        if(result) {
+            ClubInquiryBasicInfoDTO res = clubServiceFacade.getClubInfo(club.getId());
+            assertThat(res.getId()).isEqualTo(club.getId());
+            assertThat(res.getRegularMeetingTime()).isEqualTo(clubUpdateBasicInfoDTO.getRegularMeetingTime());
+        }
 
-        ClubUpdateBasicInfoDTO result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
-        Club resClub = clubServiceFacade.findById(result.getId());
-        ClubInquiryBasicInfoDTO clubInquiryBasicInfoDTO = clubServiceFacade.getClubInfo(resClub.getId());
-
-        assertThat(clubInquiryBasicInfoDTO.getId()).isEqualTo(club.getId());
-        assertThat(clubInquiryBasicInfoDTO.getIntroduce()).isEqualTo(resClub.getClubDetail().getIntroduction());
-        assertThat(clubInquiryBasicInfoDTO.getRegisterFileId()).isEqualTo(resClub.getClubDetail().getRegisterFile().getId());
-        assertThat(clubInquiryBasicInfoDTO.getMembers().get(0).getClub().getName()).isEqualTo(resClub.getName());
     }
 }

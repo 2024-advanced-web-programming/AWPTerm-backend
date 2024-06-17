@@ -2,10 +2,10 @@ package awpterm.backend.service;
 
 import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
+import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
-import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +121,7 @@ public class ClubServiceFacade {
         return clubService.findAll();
     }
 
-    public ClubUpdateBasicInfoDTO updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
+    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
         return clubService.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile);
     }
     public ClubInquiryBasicInfoDTO getClubInfo(Long clubId) {

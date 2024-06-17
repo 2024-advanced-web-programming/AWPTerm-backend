@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,18 +49,18 @@ public class ClubService {
         return clubRepository.findAll().stream().map(ClubResponseDTO::valueOf).toList();
     }
 
-    public ClubUpdateBasicInfoDTO updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
+    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
         Club club = clubRepository.findById(clubUpdateBasicInfoDTO.getId()).orElse(null);
 
         if (club == null) { //찾은 게 없다면
-            return null;
+            return false;
         }
         if (representativePicture == null) {
             club.setClubDetail(ClubDetail.builder()
                     .introduction(clubUpdateBasicInfoDTO.getIntroduce())
                     .representativePicture(null)
                     .registerFile(FileProperty.valueOf(registerFile))
-                    .regularMeetingTime(clubUpdateBasicInfoDTO.getRegularMeetingTime())
+                    .regularMeetingTime(LocalDateTime.parse(clubUpdateBasicInfoDTO.getRegularMeetingTime()))
                     .build()
             );
         } else {
@@ -67,7 +68,7 @@ public class ClubService {
                     .introduction(clubUpdateBasicInfoDTO.getIntroduce())
                     .representativePicture(FileProperty.valueOf(representativePicture))
                     .registerFile(FileProperty.valueOf(registerFile))
-                    .regularMeetingTime(clubUpdateBasicInfoDTO.getRegularMeetingTime())
+                    .regularMeetingTime(LocalDateTime.parse(clubUpdateBasicInfoDTO.getRegularMeetingTime()))
                     .build()
             );
         }
@@ -76,6 +77,6 @@ public class ClubService {
         club.setSecretary(clubUpdateBasicInfoDTO.getSecretary());
         club.setMembers(clubUpdateBasicInfoDTO.getMembers());
 
-        return ClubUpdateBasicInfoDTO.of(club);
+        return true;
     }
 }
