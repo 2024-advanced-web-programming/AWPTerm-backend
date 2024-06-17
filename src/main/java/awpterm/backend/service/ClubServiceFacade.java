@@ -25,7 +25,6 @@ public class ClubServiceFacade {
     private final ClubApplicantService clubApplicantService;
     private final MemberService memberService;
     private final FilePropertyService filePropertyService;
-    private final ClubRepository clubRepository;
 
     public boolean isValidMemberById(String memberId) {
         return memberService.isValidMemberById(memberId);
