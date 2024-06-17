@@ -36,7 +36,7 @@ public class ClubServiceFacade {
         return memberService.isValidMemberByCode(memberCode);
     }
 
-    public ClubResponseDTO register(ClubRegisterRequestDTO clubRegisterRequestDTO) throws MalformedURLException {
+    public ClubResponseDTO register(ClubRegisterRequestDTO clubRegisterRequestDTO) {
         Club club = clubRegisterRequestDTO.toEntity();
         Member president = memberService.findByCode(clubRegisterRequestDTO.getRequestorCode());
         Member supervisor = memberService.findByCode(clubRegisterRequestDTO.getSupervisorCode());
@@ -54,8 +54,8 @@ public class ClubServiceFacade {
         return clubService.register(club);
     }
 
-    public Club findById(Long id) {
-        return clubService.findById(id);
+    public ClubResponseDTO findById(Long id) {
+        return ClubResponseDTO.valueOf(clubService.findById(id));
     }
 
     public ClubApplicationResponseDTO apply(Member loginMember, ClubApplicationRequestDTO clubApplicationRequestDTO) throws IOException {
@@ -74,11 +74,13 @@ public class ClubServiceFacade {
     }
 
     public List<ClubApplicationResponseDTO> getApplicationList(Long clubId) {
-        Club club = findById(clubId);
+        Club club = clubService.findById(clubId);
         return club.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
     }
 
     public List<ClubApplicationResponseDTO> getApplicationList(Member member) {
+        //Proxy 정보 초기화
+        member = memberService.findById(member.getId());
         return member.getApplicants().stream().map(ClubApplicationResponseDTO::valueOf).toList();
     }
 

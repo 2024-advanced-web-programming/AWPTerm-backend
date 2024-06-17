@@ -63,7 +63,7 @@ public class MemberServiceFacade {
         return clubService.findClubByCreatedBy(member);
     }
 
-    public ClubResponseDTO findClubByPresident(Member member) throws MalformedURLException {
+    public List<ClubResponseDTO> findClubByPresident(Member member) {
         return clubService.findClubByPresident(member);
     }
 }

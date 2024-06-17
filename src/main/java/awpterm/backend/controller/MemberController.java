@@ -95,11 +95,7 @@ public class MemberController {
 
     @GetMapping("/president/clubs")
     public ResponseEntity<?> presidentClubs(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
-        try {
-            return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByPresident(loginMember));
-        } catch (MalformedURLException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.toString());
-        }
+        return ApiResponse.response(HttpStatus.OK, memberServiceFacade.findClubByPresident(loginMember));
     }
 
     @GetMapping("/me")

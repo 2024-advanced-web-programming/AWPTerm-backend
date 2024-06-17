@@ -47,4 +47,6 @@ public class Club extends BaseEntity {
     private ClubDetail clubDetail;
     @OneToOne
     private Member createdBy;
+    @OneToOne
+    private FileProperty applicationForm;
 }

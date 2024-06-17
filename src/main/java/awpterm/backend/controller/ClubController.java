@@ -31,11 +31,7 @@ public class ClubController {
         if (!clubServiceFacade.isValidMemberByCode(clubRegisterRequestDTO.getSupervisorCode()))
             return ApiResponse.response(HttpStatus.BAD_REQUEST, "지도교수 코드가 잘못 입력되었습니다.");
 
-        try {
-            return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
-        } catch (MalformedURLException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.toString());
-        }
+        return ApiResponse.response(HttpStatus.CREATED, clubServiceFacade.register(clubRegisterRequestDTO));
     }
 
     @PostMapping("/application")
@@ -91,5 +87,10 @@ public class ClubController {
     public ResponseEntity<?> clubInfo(@RequestPart("data") ClubBasicInfoDTO clubBasicInfoDTO,
                                       @RequestPart(value = "image", required = false) MultipartFile representativePicture) {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.updateBasicInfo(clubBasicInfoDTO, representativePicture));
+    }
+
+    @GetMapping("/{clubId}")
+    public ResponseEntity<?> findById(@PathVariable Long clubId) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findById(clubId));
     }
 }

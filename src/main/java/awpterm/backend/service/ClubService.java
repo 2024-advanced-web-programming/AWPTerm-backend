@@ -22,7 +22,7 @@ import java.util.List;
 public class ClubService {
     private final ClubRepository clubRepository;
 
-    public ClubResponseDTO register(Club club) throws MalformedURLException {
+    public ClubResponseDTO register(Club club) {
         clubRepository.save(club);
         return ClubResponseDTO.valueOf(clubRepository.findById(club.getId()).orElse(null));
     }
@@ -47,13 +47,7 @@ public class ClubService {
     }
 
     public List<ClubResponseDTO> findAll() {
-        return clubRepository.findAll().stream().map(c -> {
-            try {
-                return ClubResponseDTO.valueOf(c);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }).toList();
+        return clubRepository.findAll().stream().map(ClubResponseDTO::valueOf).toList();
     }
 
     public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
@@ -88,16 +82,10 @@ public class ClubService {
     }
 
     public List<ClubResponseDTO> findClubByCreatedBy(Member member) {
-        return clubRepository.findByCreatedBy(member).stream().map(c -> {
-            try {
-                return ClubResponseDTO.valueOf(c);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }).toList();
+        return clubRepository.findByCreatedBy(member).stream().map(ClubResponseDTO::valueOf).toList();
     }
 
-    public ClubResponseDTO findClubByPresident(Member member) throws MalformedURLException {
-        return ClubResponseDTO.valueOf(clubRepository.findByPresident(member));
+    public List<ClubResponseDTO> findClubByPresident(Member member) {
+        return clubRepository.findByPresident(member).stream().map(ClubResponseDTO::valueOf).toList();
     }
 }

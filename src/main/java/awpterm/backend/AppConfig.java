@@ -19,7 +19,7 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addInterceptor(new MemberLoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/",
+                .excludePathPatterns("/", "/error",
                         "/member/login", "/member/register", "/member/kakao/login", "/member/kakao/token",
                         "/admin/**");
 
