@@ -1,11 +1,10 @@
 package awpterm.backend.controller;
 
-import awpterm.backend.api.request.board.BoardAddNoticeRequestDTO;
-import awpterm.backend.api.request.board.BoardAddPhotoRequestDTO;
-import awpterm.backend.api.request.board.BoardAddRecruitmentRequestDTO;
-import awpterm.backend.api.request.board.BoardAddVideoRequestDTO;
+import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.ApiResponse;
+import awpterm.backend.domain.Board;
 import awpterm.backend.domain.Member;
+import awpterm.backend.enums.BoardType;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.BoardService;
 import awpterm.backend.service.BoardServiceFacade;
@@ -24,6 +23,12 @@ import java.util.List;
 public class BoardController {
     private final BoardServiceFacade boardServiceFacade;
 
+    @PostMapping("add/allType")
+    public ResponseEntity<?> addAllTypeBoards(@SessionAttribute(value = SessionConst.LOGIN_MEMBER) Member loginMember,
+                                              @RequestBody BoardAddAllTypeRequestDTO requestDTO) {
+        return ApiResponse.response(HttpStatus.CREATED, boardServiceFacade.saveAllTypeBoard(loginMember, requestDTO));
+    }
+
     @PostMapping("/add/activity/photo")
     public ResponseEntity<?> addPhotoBoard(@SessionAttribute(value = SessionConst.LOGIN_MEMBER) Member loginMember,
                                            @RequestBody BoardAddPhotoRequestDTO requestDTO) {
@@ -41,13 +46,29 @@ public class BoardController {
                                                  @RequestBody BoardAddRecruitmentRequestDTO requestDTO) {
         return ApiResponse.response(HttpStatus.CREATED, boardServiceFacade.saveRecruitmentBoard(loginMember, requestDTO));
     }
+
     @PostMapping("/add/notice")
     public ResponseEntity<?> addNoticeBoard(@SessionAttribute(value = SessionConst.LOGIN_MEMBER) Member loginMember,
                                             @RequestBody BoardAddNoticeRequestDTO requestDTO) {
         return ApiResponse.response(HttpStatus.CREATED, boardServiceFacade.saveNoticeBoard(loginMember, requestDTO));
     }
+
     @PostMapping("/fileUpload") //이미지들 DB에 저장 및 정보 반환
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile image) {
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.storeFile(image).getFileUrl());
+    }
+
+    @GetMapping("/all/{boardType}") //타입에 맞는 모든 게시판에 대해서 보냄
+    public ResponseEntity<?> getAllBoards(@PathVariable BoardType boardType) {
+        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findAllByBoardType(boardType));
+    }
+    @GetMapping("/{boardId}") //게시판 하나 선택해서 정보 보기
+    public ResponseEntity<?> getBoardById(@PathVariable Long boardId) {
+        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findByBoardId(boardId));
+    }
+
+    @PutMapping("/modify")
+    public ResponseEntity<?> updateBoard(@RequestBody BoardUpdateRequestDTO requestDTO) {
+        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.updateByDTO(requestDTO));
     }
 }

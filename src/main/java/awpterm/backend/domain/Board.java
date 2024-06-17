@@ -25,9 +25,8 @@ public class Board {
     String title;
     @ManyToOne
     private Member writer;
+    //content 내에 이미지 정보가 담겨있기 때문에 굳이 이미지에 대해서 테이블 연관 관계 필요 x
     private String content;
-    @OneToMany
-    private List<FileProperty> activityPhotos = new ArrayList<FileProperty>();
     private String videoURL;
     @ManyToOne
     private Club club;

@@ -15,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoardAddPhotoRequestDTO {
     String title;
     Club club;
-    @Builder.Default
-    String content = "";
+    String content;
 
     public Board toEntity() {
         return Board.builder()
