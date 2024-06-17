@@ -3,6 +3,7 @@ package awpterm.backend.controller;
 import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.ApiResponse;
 import awpterm.backend.domain.Member;
+import awpterm.backend.enums.Status;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.ClubServiceFacade;
 import lombok.RequiredArgsConstructor;
@@ -83,7 +84,7 @@ public class ClubController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllClubs() {
-        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findAll());
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findByStatus(Status.승인));
     }
 
     @PutMapping( "/basicInfo") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식

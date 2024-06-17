@@ -113,6 +113,10 @@ public class ClubServiceFacade {
         return clubService.findAll();
     }
 
+    public List<ClubResponseDTO> findByStatus(Status status) {
+        return clubService.findByStatus(status).stream().map(ClubResponseDTO::valueOf).toList();
+    }
+
     public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
         return clubService.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile);
     }
