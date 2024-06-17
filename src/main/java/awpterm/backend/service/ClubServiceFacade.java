@@ -1,14 +1,11 @@
 package awpterm.backend.service;
 
-import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
-import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
-import awpterm.backend.api.request.club.ClubBasicInfoDTO;
-import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
+import awpterm.backend.api.request.club.*;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
+import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
-import awpterm.backend.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +25,6 @@ public class ClubServiceFacade {
     private final ClubApplicantService clubApplicantService;
     private final MemberService memberService;
     private final FilePropertyService filePropertyService;
-    private final ClubRepository clubRepository;
 
     public boolean isValidMemberById(String memberId) {
         return memberService.isValidMemberById(memberId);
@@ -125,7 +121,11 @@ public class ClubServiceFacade {
         return clubService.findAll();
     }
 
-    public Club updateBasicInfo(ClubBasicInfoDTO clubBasicInfoDTO, MultipartFile representativePicture) {
-        return clubService.updateBasicInfo(clubBasicInfoDTO, representativePicture);
+    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
+        return clubService.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile);
+    }
+    public ClubInquiryBasicInfoDTO getClubInfo(Long clubId) {
+        Club club = clubService.findById(clubId);
+        return ClubInquiryBasicInfoDTO.of(club);
     }
 }
