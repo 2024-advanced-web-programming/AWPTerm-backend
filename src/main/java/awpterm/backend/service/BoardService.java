@@ -59,20 +59,4 @@ public class BoardService {
     public Optional<Board> findByBoardId(Long boardId) {
         return boardRepository.findById(boardId);
     }
-
-    public boolean updateByDTO(BoardUpdateRequestDTO requestDTO) {
-        Board board = findByBoardId(requestDTO.getBoardId()).orElse(null);
-        if(board == null) {
-            return false;
-        }
-
-        board.setTitle(requestDTO.getTitle());
-        board.setBoardType(requestDTO.getBoardType());
-        board.setContent(requestDTO.getContent());
-        board.setClub(requestDTO.getClub());
-        if(requestDTO.getBoardType() == BoardType.활동_영상) {
-            board.setVideoURL(requestDTO.getVideoURL());
-        }
-        return true;
-    }
 }

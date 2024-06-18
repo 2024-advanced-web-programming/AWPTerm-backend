@@ -26,7 +26,7 @@ public class BoardResponseDTO {
                 .clubName(board.getClub().getName())
                 .content(board.getContent())
                 .videoURL(board.getVideoURL())
-                .timestamp(board.getCreatedDate().toString())
+                .timestamp(board.getTimestamp())
                 .build();
     }
 }

@@ -138,7 +138,6 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .applicantName(requestor.getName())
                 .applicantCode(requestor.getCode())
                 .applicantMajor(requestor.getMajor().toString())
-                .multipartFile(null)
                 .build();
 
         String content = objectMapper.writeValueAsString(request);

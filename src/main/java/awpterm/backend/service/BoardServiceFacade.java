@@ -51,8 +51,4 @@ public class BoardServiceFacade {
     public Board findByBoardId(Long boardId) {
         return boardService.findByBoardId(boardId).orElse(null);
     }
-
-    public boolean updateByDTO(BoardUpdateRequestDTO requestDTO) {
-        return boardService.updateByDTO(requestDTO);
-    }
 }

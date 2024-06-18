@@ -66,9 +66,4 @@ public class BoardController {
     public ResponseEntity<?> getBoardById(@PathVariable Long boardId) {
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findByBoardId(boardId));
     }
-
-    @PutMapping("/modify")
-    public ResponseEntity<?> updateBoard(@RequestBody BoardUpdateRequestDTO requestDTO) {
-        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.updateByDTO(requestDTO));
-    }
 }

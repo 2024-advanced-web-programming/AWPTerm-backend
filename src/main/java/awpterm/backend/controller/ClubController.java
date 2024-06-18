@@ -12,13 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/club")
 @RequiredArgsConstructor
 public class ClubController {
-    //TODO 관리 기능은 Member 중에서도 마스터 권한을 지녀야만 접근 가능해야함 인터셉터로 처리할 것
     private final ClubServiceFacade clubServiceFacade;
 
     @PostMapping("/register")
@@ -41,9 +38,9 @@ public class ClubController {
                                          ClubApplicationRequestDTO clubApplicationRequestDTO,
                                          @RequestPart MultipartFile file) {
         try {
-            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
-        } catch (IOException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO, file));
+        } catch (Exception e) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
