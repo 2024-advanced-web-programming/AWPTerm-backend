@@ -30,6 +30,10 @@ public class FileProperty extends BaseEntity {
     private String contentType;
 
     public static FileProperty valueOf(MultipartFile multipartFile) {
+        if (multipartFile == null) {
+            return null;
+        }
+
         String uploadedFileName = multipartFile.getOriginalFilename();
         String storedFileName = createStoredFileName(uploadedFileName);
 

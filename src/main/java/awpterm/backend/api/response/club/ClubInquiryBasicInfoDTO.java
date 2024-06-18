@@ -16,7 +16,7 @@ public class ClubInquiryBasicInfoDTO {
     private Long id;
     private String name;
     private String introduce;
-    private LocalDateTime regularMeetingTime;
+    private String regularMeetingTime;
     @Builder.Default
     private String representativePictureURL = "";
     private Long registerFileId;

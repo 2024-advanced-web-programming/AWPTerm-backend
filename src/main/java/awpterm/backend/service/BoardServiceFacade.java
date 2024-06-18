@@ -2,8 +2,8 @@ package awpterm.backend.service;
 
 import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.board.BoardResponseDTO;
-import awpterm.backend.api.response.file.FilePropertyResponseDTO;
 import awpterm.backend.domain.Board;
+import awpterm.backend.domain.FileProperty;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.BoardType;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class BoardServiceFacade {
         return boardService.saveNoticeBoard(loginMember, requestDTO);
     }
 
-    public FilePropertyResponseDTO storeFile(MultipartFile image) {
+    public FileProperty storeFile(MultipartFile image) {
         return filePropertyService.storeFile(image);
     }
 

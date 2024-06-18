@@ -14,7 +14,7 @@ public class FilePropertyResponseDTO {
     private Long fileSize;
     private String contentType;
 
-    public static FilePropertyResponseDTO of(FileProperty fileProperty){
+    public static FilePropertyResponseDTO valueOf(FileProperty fileProperty){
         if(fileProperty == null)
             return null;
 

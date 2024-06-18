@@ -3,7 +3,7 @@ package awpterm.backend.docs;
 import awpterm.backend.api.request.club.ClubApplicationDecisionDTO;
 import awpterm.backend.api.request.club.ClubApplicationRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
-import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
+import awpterm.backend.api.request.club.ClubUpdateBasicInfoRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
 import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
@@ -12,7 +12,6 @@ import awpterm.backend.domain.*;
 import awpterm.backend.enums.*;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.ClubServiceFacade;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -427,7 +426,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .build());
 
 
-        ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO = ClubUpdateBasicInfoDTO.builder()
+        ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO = ClubUpdateBasicInfoRequestDTO.builder()
                 .id(1L)
                 .name(request.getName())
                 .introduce("간단한 소개")
@@ -444,7 +443,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
 
         MockMultipartFile representativePicture = new MockMultipartFile(img_name, img_contentType, img_path, img_path.getBytes(StandardCharsets.UTF_8));
 
-        String file_name = "file";
+        String file_name = "static";
         String file_contentType = "multipart/form-data";
         String file_path = "test.text";
 

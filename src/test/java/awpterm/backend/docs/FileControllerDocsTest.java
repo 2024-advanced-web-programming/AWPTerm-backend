@@ -1,11 +1,8 @@
 package awpterm.backend.docs;
 
-import awpterm.backend.Config;
 import awpterm.backend.controller.FileController;
-import awpterm.backend.domain.FileProperty;
 import awpterm.backend.service.FilePropertyService;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
@@ -42,7 +39,7 @@ public class FileControllerDocsTest extends RestDocsTest {
         given(filePropertyService.download(any()))
                 .willReturn(pair);
 
-        mockMvc.perform(get("/file/download/1")
+        mockMvc.perform(get("/static/download/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

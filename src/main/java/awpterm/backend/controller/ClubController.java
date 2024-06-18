@@ -9,12 +9,10 @@ import awpterm.backend.service.ClubServiceFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/club")
@@ -87,12 +85,6 @@ public class ClubController {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findByStatus(Status.승인));
     }
 
-    @PutMapping( "/basicInfo") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식
-    public ResponseEntity<?> clubInfo(@Validated @RequestPart("data") ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO,
-                                      @RequestPart(value = "image", required = false) MultipartFile representativePicture,
-                                      @RequestPart(value = "registerFile") MultipartFile registerFile) {
-        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile));
-    }
     @GetMapping("/inquiryInfo/{clubId}") //동아리 id에 맞는 기본 정보 조회
     public ResponseEntity<?> getClubInfo(@PathVariable Long clubId) {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getClubInfo(clubId));
@@ -101,5 +93,14 @@ public class ClubController {
     @GetMapping("/{clubId}")
     public ResponseEntity<?> findById(@PathVariable Long clubId) {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.findById(clubId));
+    }
+
+    @PutMapping( "/{clubId}") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식
+    public ResponseEntity<?> clubInfo(@PathVariable Long clubId,
+                                      ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO,
+                                      @RequestPart(required = false) MultipartFile applicationForm,
+                                      @RequestPart(required = false) MultipartFile clubPhoto) {
+        clubServiceFacade.updateBasicInfo(clubId, clubUpdateBasicInfoRequestDTO, applicationForm, clubPhoto);
+        return ApiResponse.response(HttpStatus.OK, null);
     }
 }
