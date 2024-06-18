@@ -12,13 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/club")
 @RequiredArgsConstructor
 public class ClubController {
-    //TODO 관리 기능은 Member 중에서도 마스터 권한을 지녀야만 접근 가능해야함 인터셉터로 처리할 것
     private final ClubServiceFacade clubServiceFacade;
 
     @PostMapping("/register")
@@ -38,11 +35,12 @@ public class ClubController {
 
     @PostMapping("/application")
     public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
-                                         @RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO) {
+                                         ClubApplicationRequestDTO clubApplicationRequestDTO,
+                                         @RequestPart MultipartFile file) {
         try {
-            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
-        } catch (IOException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO, file));
+        } catch (Exception e) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -59,16 +57,25 @@ public class ClubController {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(loginMember));
     }
 
+    @GetMapping("/list/me")
+    public ResponseEntity<?> myClubList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getMyClubList(loginMember));
+    }
+
     @PostMapping("/application/decision")
     public ResponseEntity<?> applicationDecision(@RequestBody ClubApplicationDecisionDTO clubApplicationDecisionDTO) {
         clubServiceFacade.applicationDecision(clubApplicationDecisionDTO);
         return ApiResponse.response(HttpStatus.OK, null);
     }
 
-    @DeleteMapping("/dismiss")
-    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam String memberId) {
-        clubServiceFacade.clubMemberDelete(clubId, memberId);
-        return ApiResponse.response(HttpStatus.OK, null);
+    @DeleteMapping("/{clubId}/dismiss/{memberId}")
+    public ResponseEntity<?> dismiss(@PathVariable Long clubId, @PathVariable String memberId) {
+        try {
+            clubServiceFacade.clubMemberDelete(clubId, memberId);
+            return ApiResponse.response(HttpStatus.OK, null);
+        } catch (RuntimeException e) {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     //동아리 승인 및 거절

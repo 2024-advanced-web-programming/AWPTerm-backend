@@ -23,16 +23,27 @@ public class ClubResponseDTO {
     private String rejectedReason;
     private String regularMeetingTime;
     private List<ClubMemberResponseDTO> members;
+    private Long fileId;
+    private String fileName;
 
     public static ClubResponseDTO valueOf(Club club) {
         String representativePictureUrl = null;
         String introduction = null;
         String regularMeetingTime = null;
+        Long fileId = null;
+        String fileName = null;
 
         if (club.getClubDetail() != null) {
-            if (club.getClubDetail().getRepresentativePicture() != null) {
-                representativePictureUrl = Config.FILE_SERVER_URL + "/" + club.getClubDetail().getRepresentativePicture().getStoredFileName();
+            ClubDetail clubDetail = club.getClubDetail();
+            if (clubDetail.getRepresentativePicture() != null) {
+                representativePictureUrl = Config.FILE_SERVER_URL + "/" + clubDetail.getRepresentativePicture().getStoredFileName();
             }
+
+            if (clubDetail.getRegisterFile() != null) {
+                fileId = clubDetail.getRegisterFile().getId();
+                fileName = clubDetail.getRegisterFile().getUploadFileName();
+            }
+
             introduction = club.getClubDetail().getIntroduction();
             regularMeetingTime = club.getClubDetail().getRegularMeetingTime();
         }
@@ -49,6 +60,8 @@ public class ClubResponseDTO {
                 .rejectedReason(club.getRejectReason())
                 .regularMeetingTime(regularMeetingTime)
                 .members(ClubMemberResponseDTO.valueOf(club, club.getMembers()))
+                .fileId(fileId)
+                .fileName(fileName)
                 .build();
     }
 
@@ -56,14 +69,22 @@ public class ClubResponseDTO {
         String representativePictureUrl = null;
         String introduction = null;
         String regularMeetingTime = null;
+        Long fileId = null;
+        String fileName = null;
         Club club = clubMember.getClub();
 
         if (club.getClubDetail() != null) {
             ClubDetail clubDetail = club.getClubDetail();
             if (clubDetail.getRepresentativePicture() != null) {
-                representativePictureUrl = Config.FILE_SERVER_URL + "/" + club.getClubDetail().getRepresentativePicture().getStoredFileName();
+                representativePictureUrl = Config.FILE_SERVER_URL + "/" + clubDetail.getRepresentativePicture().getStoredFileName();
             }
-            introduction = clubDetail.getIntroduction();
+
+            if (clubDetail.getRegisterFile() != null) {
+                fileId = clubDetail.getRegisterFile().getId();
+                fileName = clubDetail.getRegisterFile().getUploadFileName();
+            }
+
+            introduction = club.getClubDetail().getIntroduction();
             regularMeetingTime = club.getClubDetail().getRegularMeetingTime();
         }
 
@@ -79,6 +100,8 @@ public class ClubResponseDTO {
                 .rejectedReason(club.getRejectReason())
                 .regularMeetingTime(regularMeetingTime)
                 .members(ClubMemberResponseDTO.valueOf(club, club.getMembers()))
+                .fileId(fileId)
+                .fileName(fileName)
                 .build();
     }
 }
