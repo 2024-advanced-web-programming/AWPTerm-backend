@@ -56,4 +56,8 @@ public class ClubService {
     public List<ClubResponseDTO> findClubByPresident(Member member) {
         return clubRepository.findByPresident(member).stream().map(ClubResponseDTO::valueOf).toList();
     }
+
+    public Club save(Club club) {
+        return clubRepository.save(club);
+    }
 }

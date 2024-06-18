@@ -38,11 +38,12 @@ public class ClubController {
 
     @PostMapping("/application")
     public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
-                                         @RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO) {
+                                         ClubApplicationRequestDTO clubApplicationRequestDTO,
+                                         @RequestPart MultipartFile file) {
         try {
-            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
-        } catch (IOException e) {
-            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, null);
+            return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO, file));
+        } catch (Exception e) {
+            return ApiResponse.response(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -65,10 +66,14 @@ public class ClubController {
         return ApiResponse.response(HttpStatus.OK, null);
     }
 
-    @DeleteMapping("/dismiss")
-    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam String memberId) {
-        clubServiceFacade.clubMemberDelete(clubId, memberId);
-        return ApiResponse.response(HttpStatus.OK, null);
+    @DeleteMapping("/{clubId}/dismiss/{memberId}")
+    public ResponseEntity<?> dismiss(@PathVariable Long clubId, @PathVariable String memberId) {
+        try {
+            clubServiceFacade.clubMemberDelete(clubId, memberId);
+            return ApiResponse.response(HttpStatus.OK, null);
+        } catch (RuntimeException e) {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     //동아리 승인 및 거절
