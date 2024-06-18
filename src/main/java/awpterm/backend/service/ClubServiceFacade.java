@@ -141,10 +141,10 @@ public class ClubServiceFacade {
                                 MultipartFile applicationForm,
                                 MultipartFile clubPhoto) {
         Club club = clubService.findById(clubId);
+        ClubDetail clubDetail = club.getClubDetail() != null ? club.getClubDetail() : ClubDetail.builder().build();
         FileProperty registerFile;
         FileProperty representativePicture;
 
-        ClubDetail clubDetail = club.getClubDetail();
         clubDetail.setIntroduction(clubUpdateBasicInfoRequestDTO.getIntroduction());
         clubDetail.setRegularMeetingTime(clubUpdateBasicInfoRequestDTO.getRegularMeetingTime());
 
