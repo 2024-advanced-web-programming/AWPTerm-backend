@@ -1,6 +1,5 @@
 package awpterm.backend.service;
 
-import awpterm.backend.api.request.admin.AdminLoginRequestDTO;
 import awpterm.backend.domain.Admin;
 import awpterm.backend.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +20,13 @@ public class AdminService {
     public Admin findById(String adminId) {
         return adminRepository.findById(adminId).orElse(null);
     }
+
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void init() {
+//        adminRepository.save(Admin.builder()
+//                .id("admin")
+//                .name("admin")
+//                .password(SHA256.encrypt("1234"))
+//                .build());
+//    }
 }
