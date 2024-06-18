@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MemberResponseDTO {
+    private String id;
     private String name;
     private String birthDate;
     private String code;
@@ -19,6 +20,7 @@ public class MemberResponseDTO {
 
     public static MemberResponseDTO valueOf(Member member) {
         return MemberResponseDTO.builder()
+                .id(member.getId())
                 .name(member.getName())
                 .birthDate(member.getBirthDate())
                 .code(member.getCode())
@@ -34,6 +36,7 @@ public class MemberResponseDTO {
         Member member = clubMember.getMember();
 
         return MemberResponseDTO.builder()
+                .id(member.getId())
                 .name(member.getName())
                 .birthDate(member.getBirthDate())
                 .code(member.getCode())

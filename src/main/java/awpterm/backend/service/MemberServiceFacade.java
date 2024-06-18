@@ -56,7 +56,7 @@ public class MemberServiceFacade {
     }
 
     public List<ClubResponseDTO> findClubByMember(Member loginMember) {
-        return clubMemberService.findByMember(loginMember);
+        return clubMemberService.findByMember(loginMember).stream().map(ClubResponseDTO::valueOf).toList();
     }
 
     public List<ClubResponseDTO> findClubByCreatedBy(Member member) {

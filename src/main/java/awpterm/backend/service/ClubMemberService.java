@@ -30,7 +30,7 @@ public class ClubMemberService {
         clubMemberRepository.save(clubMember);
     }
 
-    public List<ClubResponseDTO> findByMember(Member member) {
-        return clubMemberRepository.findByMember(member).stream().map(ClubResponseDTO::valueOf).toList();
+    public List<ClubMember> findByMember(Member member) {
+        return clubMemberRepository.findByMember(member);
     }
 }

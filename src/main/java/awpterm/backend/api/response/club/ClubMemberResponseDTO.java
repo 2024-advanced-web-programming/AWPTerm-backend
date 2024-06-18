@@ -2,6 +2,7 @@ package awpterm.backend.api.response.club;
 
 import awpterm.backend.domain.Club;
 import awpterm.backend.domain.ClubMember;
+import awpterm.backend.domain.Member;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 public class ClubMemberResponseDTO {
     private String id;
+    private Long clubId;
     private String name;
     private String role;
 
@@ -28,6 +30,7 @@ public class ClubMemberResponseDTO {
         if (club.getPresident() != null) {
             president = ClubMemberResponseDTO.builder()
                     .id(club.getPresident().getId())
+                    .clubId(club.getId())
                     .name(club.getPresident().getName())
                     .role("회장")
                     .build();
@@ -37,6 +40,7 @@ public class ClubMemberResponseDTO {
         if (club.getVicePresident() != null) {
             vicePresident = ClubMemberResponseDTO.builder()
                     .id(club.getVicePresident().getId())
+                    .clubId(club.getId())
                     .name(club.getVicePresident().getName()).role("부회장")
                     .build();
             result.add(vicePresident);
@@ -45,6 +49,7 @@ public class ClubMemberResponseDTO {
         if (club.getSecretary() != null) {
             secretary = ClubMemberResponseDTO.builder()
                     .id(club.getSecretary().getId())
+                    .clubId(club.getId())
                     .name(club.getSecretary().getName())
                     .role("총무")
                     .build();
@@ -56,10 +61,37 @@ public class ClubMemberResponseDTO {
             if (memberCheck(club, cm)) {
                 result.add(ClubMemberResponseDTO.builder()
                         .id(cm.getMember().getId())
+                        .clubId(club.getId())
                         .name(cm.getMember().getName())
                         .role("회원")
                         .build());
             }
+        }
+
+        return result;
+    }
+
+    public static List<ClubMemberResponseDTO> valueOf(Member member, List<ClubMember> clubMembers) {
+        List<ClubMemberResponseDTO> result = new ArrayList<>();
+        for (ClubMember cm : clubMembers) {
+            Club club = cm.getClub();
+            ClubMemberResponseDTO element =ClubMemberResponseDTO.builder()
+                    .id(cm.getMember().getId())
+                    .clubId(club.getId())
+                    .name(club.getName())
+                    .build();
+
+            if (club.getPresident().getId().equals(member.getId())) {
+                element.setRole("회장");
+            } else if (club.getVicePresident() != null && club.getVicePresident().getId().equals(member.getId())) {
+                element.setRole("부회장");
+            } else if (club.getSecretary() != null && club.getSecretary().getId().equals(member.getId())) {
+                element.setRole("총무");
+            } else {
+                element.setRole("회원");
+            }
+
+            result.add(element);
         }
 
         return result;
