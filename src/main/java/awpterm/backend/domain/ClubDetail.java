@@ -19,5 +19,5 @@ public class ClubDetail {
     private FileProperty registerFile; //가입 신청서
     @OneToOne
     private FileProperty representativePicture; // 대표 사진
-    private LocalDateTime regularMeetingTime;
+    private String regularMeetingTime;
 }

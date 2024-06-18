@@ -1,7 +1,7 @@
 package awpterm.backend.controller;
 
 import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
-import awpterm.backend.api.request.club.ClubUpdateBasicInfoDTO;
+import awpterm.backend.api.request.club.ClubUpdateBasicInfoRequestDTO;
 import awpterm.backend.api.request.club.ClubRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.domain.*;
@@ -113,7 +113,7 @@ class ClubControllerTest {
                 .build());
 
 
-        ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO = ClubUpdateBasicInfoDTO.builder()
+        ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO = ClubUpdateBasicInfoRequestDTO.builder()
                 .id(club.getId())
                 .name(request.getName())
                 .introduce("간단한 소개")
@@ -124,13 +124,13 @@ class ClubControllerTest {
                 .build();
 
         MockMultipartFile registerFile = new MockMultipartFile(
-                "file",
+                "static",
                 "test.txt",
                 "text/plain",
                 "This is a dummy file content.".getBytes()
         );
 
-        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
+        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoRequestDTO, null, registerFile);
 
         assertThat(result).isEqualTo(true);
     }
@@ -202,7 +202,7 @@ class ClubControllerTest {
                 .build());
 
 
-        ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO = ClubUpdateBasicInfoDTO.builder()
+        ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO = ClubUpdateBasicInfoRequestDTO.builder()
                 .id(club.getId())
                 .name(request.getName())
                 .introduce("간단한 소개")
@@ -213,16 +213,16 @@ class ClubControllerTest {
                 .build();
 
         MockMultipartFile registerFile = new MockMultipartFile(
-                "file",
+                "static",
                 "test.txt",
                 "text/plain",
                 "This is a dummy file content.".getBytes()
         );
-        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoDTO, null, registerFile);
+        boolean result = clubServiceFacade.updateBasicInfo(clubUpdateBasicInfoRequestDTO, null, registerFile);
         if(result) {
             ClubInquiryBasicInfoDTO res = clubServiceFacade.getClubInfo(club.getId());
             assertThat(res.getId()).isEqualTo(club.getId());
-            assertThat(res.getRegularMeetingTime()).isEqualTo(clubUpdateBasicInfoDTO.getRegularMeetingTime());
+            assertThat(res.getRegularMeetingTime()).isEqualTo(clubUpdateBasicInfoRequestDTO.getRegularMeetingTime());
         }
 
     }

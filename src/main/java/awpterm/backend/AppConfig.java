@@ -4,9 +4,7 @@ import awpterm.backend.interceptor.AdminLoginCheckInterceptor;
 import awpterm.backend.interceptor.LogInterceptor;
 import awpterm.backend.interceptor.MemberLoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {

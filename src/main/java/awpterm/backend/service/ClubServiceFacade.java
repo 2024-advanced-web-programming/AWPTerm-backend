@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
@@ -117,8 +116,32 @@ public class ClubServiceFacade {
         return clubService.findByStatus(status).stream().map(ClubResponseDTO::valueOf).toList();
     }
 
-    public boolean updateBasicInfo(ClubUpdateBasicInfoDTO clubUpdateBasicInfoDTO, MultipartFile representativePicture, MultipartFile registerFile) {
-        return clubService.updateBasicInfo(clubUpdateBasicInfoDTO, representativePicture, registerFile);
+    public void updateBasicInfo(Long clubId,
+                                ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO,
+                                MultipartFile applicationForm,
+                                MultipartFile clubPhoto) {
+        Club club = clubService.findById(clubId);
+        FileProperty registerFile = filePropertyService.storeFile(applicationForm);
+        FileProperty representativePicture = filePropertyService.storeFile(clubPhoto);
+
+        ClubDetail clubDetail = ClubDetail.builder()
+                                .introduction(clubUpdateBasicInfoRequestDTO.getIntroduction())
+                                .registerFile(registerFile)
+                                .representativePicture(representativePicture)
+                                .regularMeetingTime(clubUpdateBasicInfoRequestDTO.getRegularMeetingTime()).build();
+
+
+
+        Member president = memberService.findById(clubUpdateBasicInfoRequestDTO.getPresidentId());
+        Member vicePresident = memberService.findById(clubUpdateBasicInfoRequestDTO.getVicePresidentId());
+        Member secretary = memberService.findById(clubUpdateBasicInfoRequestDTO.getSecretaryId());
+
+        club.setClubDetail(clubDetail);
+        club.setPresident(president);
+        club.setVicePresident(vicePresident);
+        club.setSecretary(secretary);
+
+        clubService.updateBasicInfo(club);
     }
     public ClubInquiryBasicInfoDTO getClubInfo(Long clubId) {
         Club club = clubService.findById(clubId);
