@@ -11,7 +11,7 @@ import lombok.Data;
 public class BoardResponseDTO {
     Long id;
     String title;
-    Member writer;
+    String writerName;
     Long clubId;
     String clubName;
     String content;
@@ -23,7 +23,7 @@ public class BoardResponseDTO {
         return BoardResponseDTO.builder()
                 .id(board.getId())
                 .title(board.getTitle())
-                .writer(board.getWriter())
+                .writerName(board.getWriter().getName())
                 .clubId(board.getClub().getId())
                 .clubName(board.getClub().getName())
                 .content(board.getContent())
