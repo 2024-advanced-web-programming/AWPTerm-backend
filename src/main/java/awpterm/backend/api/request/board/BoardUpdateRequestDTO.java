@@ -13,7 +13,7 @@ public class BoardUpdateRequestDTO {
     Long boardId;
     String title;
     String content;
-    Club club;
+    Long clubId;
     BoardType boardType;
     String videoURL;
 
@@ -22,7 +22,7 @@ public class BoardUpdateRequestDTO {
                 .id(boardId)
                 .title(title)
                 .content(content)
-                .club(club)
+                .id(clubId)
                 .boardType(boardType)
                 .build();
     }

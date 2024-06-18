@@ -11,6 +11,6 @@ import java.util.List;
 public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> findByStatus(Status status);
     List<Club> findByCreatedBy(Member createdBy);
-    @Query("SELECT c FROM Club c WHERE c.status = '승인'")
+    @Query("SELECT c FROM Club c WHERE c.president = :president AND c.status = '승인'")
     List<Club> findByPresident(Member president);
 }

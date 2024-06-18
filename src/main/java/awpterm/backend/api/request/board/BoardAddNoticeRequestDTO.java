@@ -9,14 +9,14 @@ import lombok.Data;
 @Data
 public class BoardAddNoticeRequestDTO {
     String title;
-    Club club;
+    Long clubId;
     String content;
 
     public Board toEntity() {
         return Board.builder()
                 .title(title)
                 .content(content)
-                .club(club)
+                .id(clubId)
                 .boardType(BoardType.동아리_공지)
                 .build();
     }

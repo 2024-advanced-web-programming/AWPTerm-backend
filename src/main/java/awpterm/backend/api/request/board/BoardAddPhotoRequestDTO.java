@@ -14,13 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class BoardAddPhotoRequestDTO {
     String title;
-    Club club;
+    Long clubId;
     String content;
 
     public Board toEntity() {
         return Board.builder()
                 .title(title)
-                .club(club)
+                .id(clubId)
                 .content(content)
                 .boardType(BoardType.활동_사진)
                 .build();

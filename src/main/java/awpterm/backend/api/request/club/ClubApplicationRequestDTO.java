@@ -11,5 +11,4 @@ public class ClubApplicationRequestDTO {
     private String applicantName;
     private String applicantCode;
     private String applicantMajor;
-    private MultipartFile multipartFile;
 }

@@ -12,14 +12,21 @@ public class BoardResponseDTO {
     Long id;
     String title;
     Member writer;
-    Club club;
+    String clubName;
+    String content;
+    String videoURL;
+    String timestamp;
+
 
     public static BoardResponseDTO valueOf(Board board) {
         return BoardResponseDTO.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .writer(board.getWriter())
-                .club(board.getClub())
+                .clubName(board.getClub().getName())
+                .content(board.getContent())
+                .videoURL(board.getVideoURL())
+                .timestamp(board.getCreatedDate().toString())
                 .build();
     }
 }

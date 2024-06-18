@@ -37,8 +37,9 @@ public class ClubController {
     }
 
     @PostMapping("/application")
-    public ResponseEntity<?> application(@RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO,
-                                         @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+    public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
+                                         ClubApplicationRequestDTO clubApplicationRequestDTO,
+                                         @RequestPart MultipartFile file) {
         try {
             return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
         } catch (IOException e) {
@@ -59,16 +60,25 @@ public class ClubController {
         return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getApplicationList(loginMember));
     }
 
+    @GetMapping("/list/me")
+    public ResponseEntity<?> myClubList(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, clubServiceFacade.getMyClubList(loginMember));
+    }
+
     @PostMapping("/application/decision")
     public ResponseEntity<?> applicationDecision(@RequestBody ClubApplicationDecisionDTO clubApplicationDecisionDTO) {
         clubServiceFacade.applicationDecision(clubApplicationDecisionDTO);
         return ApiResponse.response(HttpStatus.OK, null);
     }
 
-    @DeleteMapping("/dismiss")
-    public ResponseEntity<?> dismiss(@RequestParam Long clubId, @RequestParam String memberId) {
-        clubServiceFacade.clubMemberDelete(clubId, memberId);
-        return ApiResponse.response(HttpStatus.OK, null);
+    @DeleteMapping("/{clubId}/dismiss/{memberId}")
+    public ResponseEntity<?> dismiss(@PathVariable Long clubId, @PathVariable String memberId) {
+        try {
+            clubServiceFacade.clubMemberDelete(clubId, memberId);
+            return ApiResponse.response(HttpStatus.OK, null);
+        } catch (RuntimeException e) {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     //동아리 승인 및 거절
@@ -97,9 +107,9 @@ public class ClubController {
 
     @PutMapping( "/{clubId}") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식
     public ResponseEntity<?> clubInfo(@PathVariable Long clubId,
+                                      ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO,
                                       @RequestPart(required = false) MultipartFile applicationForm,
-                                      @RequestPart(required = false) MultipartFile clubPhoto,
-                                      ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO) {
+                                      @RequestPart(required = false) MultipartFile clubPhoto) {
         clubServiceFacade.updateBasicInfo(clubId, clubUpdateBasicInfoRequestDTO, applicationForm, clubPhoto);
         return ApiResponse.response(HttpStatus.OK, null);
     }

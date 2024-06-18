@@ -1,10 +1,7 @@
 package awpterm.backend.service;
 
 import awpterm.backend.api.request.club.*;
-import awpterm.backend.api.response.club.ClubApplicationResponseDTO;
-import awpterm.backend.api.response.club.ClubInquiryBasicInfoDTO;
-import awpterm.backend.api.response.club.ClubResponseDTO;
-import awpterm.backend.api.response.club.RegisterListResponseDTO;
+import awpterm.backend.api.response.club.*;
 import awpterm.backend.domain.*;
 import awpterm.backend.enums.Status;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -56,15 +52,22 @@ public class ClubServiceFacade {
         return ClubResponseDTO.valueOf(clubService.findById(id));
     }
 
-    public ClubApplicationResponseDTO apply(Member loginMember, ClubApplicationRequestDTO clubApplicationRequestDTO) throws IOException {
+    public ClubApplicationResponseDTO apply(Member loginMember,
+                                            ClubApplicationRequestDTO clubApplicationRequestDTO,
+                                            MultipartFile file) {
         Club club = clubService.findById(clubApplicationRequestDTO.getClubId());
-        filePropertyService.storeFile(clubApplicationRequestDTO.getMultipartFile());
+        List<ClubMember> clubMembers = club.getMembers();
+        for (ClubMember cm : clubMembers) {
+            if (cm.getMember().getId().equals(loginMember.getId())) {
+                throw new RuntimeException("이미 가입된 동아리입니다.");
+            }
+        }
 
-        FileProperty file = FileProperty.valueOf(clubApplicationRequestDTO.getMultipartFile());
+        FileProperty fileProperty = filePropertyService.storeFile(file);
         ClubApplicant clubApplicant = ClubApplicant.builder()
                                         .club(club)
                                         .applicant(loginMember)
-                                        .applicationForm(file)
+                                        .applicationForm(fileProperty)
                                         .build();
         clubApplicantService.save(clubApplicant);
 
@@ -83,10 +86,27 @@ public class ClubServiceFacade {
     }
 
 
-    public void clubMemberDelete(Long clubId, String memberId) {
+    public void clubMemberDelete(Long clubId, String memberId) throws RuntimeException {
         Club club = clubService.findById(clubId);
-        Member member = memberService.findById(String.valueOf(memberId));
+        Member member = memberService.findById(memberId);
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
+
+        Member president = club.getPresident();
+        if (president.equals(member)) {
+            throw new RuntimeException("회장은 탈퇴시킬 수 없습니다.");
+        }
+
+        Member vicePresident = club.getVicePresident();
+        if (vicePresident != null && vicePresident.equals(member)) {
+            club.setVicePresident(null);
+        }
+
+        Member secretary = club.getSecretary();
+        if (secretary != null && secretary.equals(member)) {
+            club.setSecretary(null);
+        }
+
+        clubService.save(club);
         clubMemberService.delete(clubMember);
     }
 
@@ -121,21 +141,28 @@ public class ClubServiceFacade {
                                 MultipartFile applicationForm,
                                 MultipartFile clubPhoto) {
         Club club = clubService.findById(clubId);
-        FileProperty registerFile = filePropertyService.storeFile(applicationForm);
-        FileProperty representativePicture = filePropertyService.storeFile(clubPhoto);
+        FileProperty registerFile;
+        FileProperty representativePicture;
 
-        ClubDetail clubDetail = ClubDetail.builder()
-                                .introduction(clubUpdateBasicInfoRequestDTO.getIntroduction())
-                                .registerFile(registerFile)
-                                .representativePicture(representativePicture)
-                                .regularMeetingTime(clubUpdateBasicInfoRequestDTO.getRegularMeetingTime()).build();
+        ClubDetail clubDetail = club.getClubDetail();
+        clubDetail.setIntroduction(clubUpdateBasicInfoRequestDTO.getIntroduction());
+        clubDetail.setRegularMeetingTime(clubUpdateBasicInfoRequestDTO.getRegularMeetingTime());
 
+        if (applicationForm != null) {
+            registerFile = filePropertyService.storeFile(applicationForm);
+            clubDetail.setRegisterFile(registerFile);
+        }
 
+        if (clubPhoto != null) {
+            representativePicture = filePropertyService.storeFile(clubPhoto);
+            clubDetail.setRepresentativePicture(representativePicture);
+        }
 
         Member president = memberService.findById(clubUpdateBasicInfoRequestDTO.getPresidentId());
         Member vicePresident = memberService.findById(clubUpdateBasicInfoRequestDTO.getVicePresidentId());
         Member secretary = memberService.findById(clubUpdateBasicInfoRequestDTO.getSecretaryId());
 
+        club.setClubDetail(clubDetail);
         club.setClubDetail(clubDetail);
         club.setPresident(president);
         club.setVicePresident(vicePresident);
@@ -150,5 +177,10 @@ public class ClubServiceFacade {
 
     public List<RegisterListResponseDTO> getRegisterList() {
         return clubService.findByStatus(Status.검토).stream().map(RegisterListResponseDTO::valueOf).toList();
+    }
+
+    public List<ClubMemberResponseDTO> getMyClubList(Member member) {
+        List<ClubMember> clubMembers = clubMemberService.findByMember(member);
+        return ClubMemberResponseDTO.valueOf(member, clubMembers);
     }
 }
