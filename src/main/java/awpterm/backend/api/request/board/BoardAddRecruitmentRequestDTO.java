@@ -11,14 +11,14 @@ import lombok.Data;
 @Builder
 public class BoardAddRecruitmentRequestDTO {
     String title;
-    Club club;
+    Long clubId;
     String content;
 
     public Board toEntity() {
         return Board.builder()
                 .title(title)
                 .content(content)
-                .club(club)
+                .id(clubId)
                 .boardType(BoardType.부원_모집)
                 .build();
     }
