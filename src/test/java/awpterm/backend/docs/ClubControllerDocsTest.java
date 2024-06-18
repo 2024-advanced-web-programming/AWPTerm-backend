@@ -179,7 +179,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
 //                        .build()
 //        );
 
-        given(clubServiceFacade.findById(any())).willReturn(new Club());
+        given(clubServiceFacade.findById(any())).willReturn(ClubResponseDTO.valueOf(new Club()));
         //given(clubServiceFacade.getApplicationList(1L)).willReturn(applicationResponseDTOS);
         mockMvc.perform(get("/club/application/list/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -520,7 +520,7 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .id(1L)
                 .name(request.getName())
                 .introduce("간단한 소개")
-                .regularMeetingTime(LocalDateTime.now())
+                .regularMeetingTime(LocalDateTime.now().toString())
                 .vicePresident(vicePresident)
                 .secretary(secretary)
                 .members(members)
