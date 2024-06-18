@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,30 +26,35 @@ public class BoardService {
     public BoardResponseDTO saveAllTypeBoard(Member loginMember, BoardAddAllTypeRequestDTO boardAddAllTypeRequestDTO) {
         Board board = boardAddAllTypeRequestDTO.toEntity();
         board.setWriter(loginMember);
+        board.setTimestamp(LocalDateTime.now().toString());
         return BoardResponseDTO.valueOf(boardRepository.save(board));
     }
 
     public BoardResponseDTO savePhotoBoard(Member loginMember, BoardAddPhotoRequestDTO boardAddPhotoRequestDTO) {
         Board board = boardAddPhotoRequestDTO.toEntity();
         board.setWriter(loginMember);
+        board.setTimestamp(LocalDateTime.now().toString());
         return BoardResponseDTO.valueOf(boardRepository.save(board));
     }
 
     public BoardResponseDTO saveVideoBoard(Member loginMember, BoardAddVideoRequestDTO boardAddVideoRequestDTO) {
         Board board = boardAddVideoRequestDTO.toEntity();
         board.setWriter(loginMember);
+        board.setTimestamp(LocalDateTime.now().toString());
         return BoardResponseDTO.valueOf(boardRepository.save(board));
     }
 
     public BoardResponseDTO saveRecruitmentBoard(Member loginMember, BoardAddRecruitmentRequestDTO boardAddRecruitmentRequestDTO) {
         Board board = boardAddRecruitmentRequestDTO.toEntity();
         board.setWriter(loginMember);
+        board.setTimestamp(LocalDateTime.now().toString());
         return BoardResponseDTO.valueOf(boardRepository.save(board));
     }
 
     public BoardResponseDTO saveNoticeBoard(Member loginMember, BoardAddNoticeRequestDTO boardAddNoticeRequestDTO) {
         Board board = boardAddNoticeRequestDTO.toEntity();
         board.setWriter(loginMember);
+        board.setTimestamp(LocalDateTime.now().toString());
         return BoardResponseDTO.valueOf(boardRepository.save(board));
     }
 
