@@ -60,10 +60,21 @@ public class BoardController {
 
     @GetMapping("/all/{boardType}") //타입에 맞는 모든 게시판에 대해서 보냄
     public ResponseEntity<?> getAllBoards(@PathVariable BoardType boardType) {
+        if(BoardType.동아리_공지 == boardType) {
+            return ApiResponse.response(HttpStatus.BAD_REQUEST, null);
+        }
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findAllByBoardType(boardType));
     }
     @GetMapping("/{boardId}") //게시판 하나 선택해서 정보 보기
     public ResponseEntity<?> getBoardById(@PathVariable Long boardId) {
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findByBoardId(boardId));
+    }
+    @GetMapping("/inquiry/noticeType") //로그인 유저가 가입되어있는 동아리에 대해서만 조회
+    public ResponseEntity<?> inquiryNoticeTypeBoard(@SessionAttribute Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findAllByNoticeType(loginMember, BoardType.동아리_공지));
+    }
+    @GetMapping("/inquiry/all")
+    public ResponseEntity<?> inquiryNoticeTypeAndAllTypeBoard(@SessionAttribute Member loginMember) {
+        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.getNoticeTypeAndAllTypeBoard(loginMember));
     }
 }
