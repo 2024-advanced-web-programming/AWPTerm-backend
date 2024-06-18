@@ -3,10 +3,7 @@ package awpterm.backend.service;
 import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.board.BoardResponseDTO;
 import awpterm.backend.api.response.club.ClubMemberResponseDTO;
-import awpterm.backend.domain.Board;
-import awpterm.backend.domain.ClubMember;
-import awpterm.backend.domain.FileProperty;
-import awpterm.backend.domain.Member;
+import awpterm.backend.domain.*;
 import awpterm.backend.enums.BoardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,25 +23,26 @@ public class BoardServiceFacade {
     private final BoardService boardService;
     private final FilePropertyService filePropertyService;
     private final ClubMemberService clubMemberService;
+    private final ClubService clubService;
 
     public BoardResponseDTO saveAllTypeBoard(Member loginMember, BoardAddAllTypeRequestDTO requestDTO) {
-        return boardService.saveAllTypeBoard(loginMember, requestDTO);
+        return boardService.saveAllTypeBoard(loginMember, requestDTO, clubService.findById(requestDTO.getClubId()));
     }
 
     public BoardResponseDTO savePhotoBoard(Member loginMember, BoardAddPhotoRequestDTO requestDTO) {
-        return boardService.savePhotoBoard(loginMember, requestDTO);
+        return boardService.savePhotoBoard(loginMember, requestDTO, clubService.findById(requestDTO.getClubId()));
     }
 
     public BoardResponseDTO saveVideoBoard(Member loginMember, BoardAddVideoRequestDTO requestDTO) {
-        return boardService.saveVideoBoard(loginMember, requestDTO);
+        return boardService.saveVideoBoard(loginMember, requestDTO, clubService.findById(requestDTO.getClubId()));
     }
 
     public BoardResponseDTO saveRecruitmentBoard(Member loginMember, BoardAddRecruitmentRequestDTO requestDTO) {
-        return boardService.saveRecruitmentBoard(loginMember, requestDTO);
+        return boardService.saveRecruitmentBoard(loginMember, requestDTO,clubService.findById(requestDTO.getClubId()));
     }
 
     public BoardResponseDTO saveNoticeBoard(Member loginMember, BoardAddNoticeRequestDTO requestDTO) {
-        return boardService.saveNoticeBoard(loginMember, requestDTO);
+        return boardService.saveNoticeBoard(loginMember, requestDTO, clubService.findById(requestDTO.getClubId()));
     }
 
     public FileProperty storeFile(MultipartFile image) {
@@ -56,16 +54,16 @@ public class BoardServiceFacade {
     }
 
     public Board findByBoardId(Long boardId) {
-        return boardService.findByBoardId(boardId).orElse(null);
+        return boardService.findByBoardId(boardId);
     }
 
     public List<BoardResponseDTO> findAllByNoticeType(Member loginMember, BoardType boardType) {
         List<BoardResponseDTO> findByTypeResults = boardService.findAllByBoardType(boardType);
-        List<ClubMember> clubMembers= clubMemberService.findByMember(loginMember);
+        List<ClubMember> clubMembers = clubMemberService.findByMember(loginMember);
         List<BoardResponseDTO> results = new ArrayList<>();
-        for(BoardResponseDTO boardResponseDTO : findByTypeResults) {
-            for(ClubMember clubMember : clubMembers) {
-                if(Objects.equals(boardResponseDTO.getClubId(), clubMember.getClub().getId())) {
+        for (BoardResponseDTO boardResponseDTO : findByTypeResults) {
+            for (ClubMember clubMember : clubMembers) {
+                if (Objects.equals(boardResponseDTO.getClubId(), clubMember.getClub().getId())) {
                     results.add(boardResponseDTO);
                 }
             }

@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BoardAddRecruitmentRequestDTO {
+public class BoardAddRecruitmentRequestDTO implements BoardRequestDTO{
     String title;
     Long clubId;
     String content;

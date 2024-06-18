@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BoardAddAllTypeRequestDTO {
+public class BoardAddAllTypeRequestDTO implements BoardRequestDTO{
     String title;
     Long clubId;
     String content;
