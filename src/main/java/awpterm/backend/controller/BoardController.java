@@ -1,5 +1,6 @@
 package awpterm.backend.controller;
 
+import awpterm.backend.Config;
 import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.ApiResponse;
 import awpterm.backend.domain.Board;
@@ -55,7 +56,7 @@ public class BoardController {
 
     @PostMapping("/fileUpload") //이미지들 DB에 저장 및 정보 반환
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile image) {
-        return ApiResponse.response(HttpStatus.OK, boardServiceFacade.storeFile(image).getFileUrl());
+        return ApiResponse.response(HttpStatus.OK, Config.FILE_SERVER_URL + boardServiceFacade.storeFile(image).getStoredFileName());
     }
 
     @GetMapping("/all/{boardType}") //타입에 맞는 모든 게시판에 대해서 보냄
