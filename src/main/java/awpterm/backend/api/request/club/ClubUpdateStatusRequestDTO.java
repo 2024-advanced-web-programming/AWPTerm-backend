@@ -1,5 +1,6 @@
 package awpterm.backend.api.request.club;
 
+import awpterm.backend.domain.Club;
 import lombok.Builder;
 import lombok.Data;
 

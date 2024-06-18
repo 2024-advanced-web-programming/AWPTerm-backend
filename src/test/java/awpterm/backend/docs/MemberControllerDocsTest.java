@@ -2,19 +2,28 @@ package awpterm.backend.docs;
 
 import awpterm.backend.api.request.member.MemberLoginRequestDTO;
 import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
+import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.api.response.member.MemberResponseDTO;
 import awpterm.backend.controller.MemberController;
+import awpterm.backend.domain.Club;
+import awpterm.backend.domain.ClubMember;
+import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Gender;
 import awpterm.backend.enums.Major;
 import awpterm.backend.enums.Position;
+import awpterm.backend.etc.MakeMockMember;
+import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.MemberService;
 import awpterm.backend.service.MemberServiceFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static awpterm.backend.etc.MakeMockClub.makeMockClub;
+import static awpterm.backend.etc.MakeMockMember.makeMockStudent;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -73,8 +82,8 @@ public class MemberControllerDocsTest extends RestDocsTest {
                         .build());
 
         mockMvc.perform(post("/member/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("member-register",
@@ -123,6 +132,27 @@ public class MemberControllerDocsTest extends RestDocsTest {
     }
 
     @Test
+    void 카카오_로그인() throws Exception {
+        MemberLoginRequestDTO request = MemberLoginRequestDTO.builder()
+                .id("kakaoId")
+                .password("token").
+                build();
+
+        given(memberServiceFacade.isValidMemberById(request.getId())).willReturn(true);
+        given(memberServiceFacade.isValidLoginRequest(request)).willReturn(true);
+        mockMvc.perform(post("/member/kakao/login")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("member-kakao-login",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint())
+                        )
+                );
+    }
+
+    @Test
     void 지도교수_목록_테스트() throws Exception {
         List<MemberResponseDTO> 교수님들 = new ArrayList<>();
         교수님들.add(MemberResponseDTO.builder()
@@ -163,10 +193,48 @@ public class MemberControllerDocsTest extends RestDocsTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("professors",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        responseBody()
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                responseBody()
                         )
                 );
+    }
+
+    @Test
+    void 자기가_속한_동아리_목록() throws Exception {
+        Club club1 = makeMockClub();
+        Club club2 = makeMockClub();
+        club2.setId(2L);
+        club2.setName("test2");
+
+        Member loginMember = makeMockStudent("학생1");
+
+        ClubMember clubMember = ClubMember.builder()
+                .id(1L)
+                .club(club1)
+                .member(loginMember)
+                .build();
+        ClubMember clubMember1 = ClubMember.builder()
+                .id(2L)
+                .club(club2)
+                .member(loginMember)
+                .build();
+
+        List<ClubResponseDTO> responseDTOS = new ArrayList<>();
+        responseDTOS.add(ClubResponseDTO.valueOf(clubMember));
+        responseDTOS.add(ClubResponseDTO.valueOf(clubMember1));
+
+        given(memberServiceFacade.findClubByMember(loginMember)).willReturn(responseDTOS);
+        mockMvc.perform(get("/member/clubs")
+                        .sessionAttr(SessionConst.LOGIN_MEMBER, loginMember))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("member-clubs",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint())
+                        )
+                );
+
+
     }
 }

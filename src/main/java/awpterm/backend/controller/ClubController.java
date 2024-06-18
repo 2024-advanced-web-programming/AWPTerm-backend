@@ -37,8 +37,8 @@ public class ClubController {
     }
 
     @PostMapping("/application")
-    public ResponseEntity<?> application(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember,
-                                         @RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO) {
+    public ResponseEntity<?> application(@RequestPart ClubApplicationRequestDTO clubApplicationRequestDTO,
+                                         @SessionAttribute(name = SessionConst.LOGIN_MEMBER) Member loginMember) {
         try {
             return ApiResponse.response(HttpStatus.OK, clubServiceFacade.apply(loginMember, clubApplicationRequestDTO));
         } catch (IOException e) {
@@ -97,9 +97,9 @@ public class ClubController {
 
     @PutMapping( "/{clubId}") //기본 정보 입력 및 수정 -> 이미 동아리는 등록되어있으므로 등록된 엔티티에 수정하는 방식
     public ResponseEntity<?> clubInfo(@PathVariable Long clubId,
-                                      ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO,
                                       @RequestPart(required = false) MultipartFile applicationForm,
-                                      @RequestPart(required = false) MultipartFile clubPhoto) {
+                                      @RequestPart(required = false) MultipartFile clubPhoto,
+                                      ClubUpdateBasicInfoRequestDTO clubUpdateBasicInfoRequestDTO) {
         clubServiceFacade.updateBasicInfo(clubId, clubUpdateBasicInfoRequestDTO, applicationForm, clubPhoto);
         return ApiResponse.response(HttpStatus.OK, null);
     }
