@@ -4,20 +4,17 @@ import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.board.BoardResponseDTO;
 import awpterm.backend.domain.Board;
 import awpterm.backend.domain.Club;
-import awpterm.backend.domain.FileProperty;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.BoardType;
 import awpterm.backend.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class BoardService {
     }
 
     public List<BoardResponseDTO> findAllByBoardType(BoardType boardType) {
-        return boardRepository.findAllByBoardType(boardType);
+        return boardRepository.findAllByBoardTypeOrderByTimeStampDesc(boardType);
     }
 
     public BoardResponseDTO findByBoardId(Long boardId) {

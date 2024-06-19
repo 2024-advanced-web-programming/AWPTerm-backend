@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    List<BoardResponseDTO> findAllByBoardType(BoardType boardType);
+    List<BoardResponseDTO> findAllByBoardTypeOrderByTimeStampDesc(BoardType boardType);
 }

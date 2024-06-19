@@ -73,9 +73,7 @@ public class BoardController {
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findByBoardId(boardId));
     }
     @GetMapping("/inquiry/noticeType") //로그인 유저가 가입되어있는 동아리에 대해서만 조회
-    public ResponseEntity<?> inquiryNoticeTypeBoard(HttpSession session) {
-        Member loginMember = (Member) session.getAttribute("loginMember");
-
+    public ResponseEntity<?> inquiryNoticeTypeBoard(@SessionAttribute(required = false) Member loginMember) {
         if(loginMember == null) {
             return ApiResponse.response(HttpStatus.OK, "[]");
         }
