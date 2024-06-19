@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,9 @@ public class BoardService {
         Board board = boardDTO.toEntity();
         board.setClub(club);
         board.setWriter(loginMember);
-        board.setTimestamp(LocalDateTime.now().toString());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        board.setTimestamp(LocalDateTime.now().format(formatter));
 
         return board;
     }

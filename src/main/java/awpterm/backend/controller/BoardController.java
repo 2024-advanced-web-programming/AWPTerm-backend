@@ -9,10 +9,12 @@ import awpterm.backend.enums.BoardType;
 import awpterm.backend.etc.SessionConst;
 import awpterm.backend.service.BoardService;
 import awpterm.backend.service.BoardServiceFacade;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,11 +73,24 @@ public class BoardController {
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findByBoardId(boardId));
     }
     @GetMapping("/inquiry/noticeType") //로그인 유저가 가입되어있는 동아리에 대해서만 조회
-    public ResponseEntity<?> inquiryNoticeTypeBoard(@SessionAttribute Member loginMember) {
+    public ResponseEntity<?> inquiryNoticeTypeBoard(HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if(loginMember == null) {
+            return ApiResponse.response(HttpStatus.OK, "[]");
+        }
+
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.findAllByNoticeType(loginMember, BoardType.동아리_공지));
     }
+
     @GetMapping("/inquiry/all") // 동아리 + 전체 공지
-    public ResponseEntity<?> inquiryNoticeTypeAndAllTypeBoard(@SessionAttribute Member loginMember) {
+    public ResponseEntity<?> inquiryNoticeTypeAndAllTypeBoard(HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if(loginMember == null) {
+            return getAllBoards(BoardType.전체_공지);
+        }
+
         return ApiResponse.response(HttpStatus.OK, boardServiceFacade.getNoticeTypeAndAllTypeBoard(loginMember));
     }
 }
