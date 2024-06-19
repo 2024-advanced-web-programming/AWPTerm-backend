@@ -1,64 +1,48 @@
 [[club]]
-=== 동아리 등록 신청
+=== 동아리 신청
 ==== 요청
 include::{snippets}/club-register-right/http-request.adoc[]
-
 ==== 응답
 include::{snippets}/club-register-right/http-response.adoc[]
 
-==== 응답(신청자/지도교수 코드가 잘못 입력됨)
-include::{snippets}/club-register-wrong/http-response.adoc[]
-
-=== 동아리 신청
+=== 동아리 가입 신청
 ==== 요청
 include::{snippets}/club-application/http-request.adoc[]
-
 ==== 응답
 include::{snippets}/club-application/http-response.adoc[]
 
-=== 동아리 리스트
+=== 동아리 신청 승인
 ==== 요청
-include::{snippets}/club-application-list/http-request.adoc[]
-
-==== 응답
-include::{snippets}/club-register-right/http-response.adoc[]
-
-==== 응답 (클럽을 찾을 수 없는 경우)
-include::{snippets}/club-application-list-wrong/http-response.adoc[]
-
-=== 신청서 신청 승인/거절
-==== 요청
-include::{snippets}/club-application-decision/http-request.adoc[]
-
-==== 응답
-include::{snippets}/club-application-decision/http-response.adoc[]
-
-=== 동아리 회원 탈퇴
-==== 요청
-include::{snippets}/club-dismiss/http-request.adoc[]
-
-==== 응답
-include::{snippets}/club-dismiss/http-response.adoc[]
-
-=== 동아리 승인
-==== 정상 요청
 include::{snippets}/club-updateStatus-accept-success/http-request.adoc[]
 ==== 응답
 include::{snippets}/club-updateStatus-accept-success/http-response.adoc[]
 
-==== 비정상 요청
-include::{snippets}/club-updateStatus-accept-fail/http-request.adoc[]
-==== 응답
-include::{snippets}/club-updateStatus-accept-fail/http-response.adoc[]
-
-=== 동아리 거절
-==== 정상 요청
+=== 동아리 신청 거절
+==== 요청
 include::{snippets}/club-updateStatus-reject-success/http-request.adoc[]
 ==== 응답
 include::{snippets}/club-updateStatus-reject-success/http-response.adoc[]
 
-==== 비정상 요청
-include::{snippets}/club-updateStatus-reject-fail/http-request.adoc[]
+=== 모든 동아리 조회
+==== 요청
+include::{snippets}/club-all-inquiry/http-request.adoc[]
 ==== 응답
-include::{snippets}/club-updateStatus-reject-fail/http-response.adoc[]
+include::{snippets}/club-all-inquiry/http-response.adoc[]
 
+=== 기본 정보 관리
+==== 요청
+include::{snippets}/club-inquiry-info-clubId/http-request.adoc[]
+==== 응답
+include::{snippets}/club-inquiry-info-clubId/http-response.adoc[]
+
+=== 동아리 아이디로 찾기
+==== 요청
+include::{snippets}/club-find-clubId/http-request.adoc[]
+==== 응답
+include::{snippets}/club-find-clubId/http-response.adoc[]
+
+=== 기본 정보 수정
+==== 요청
+include::{snippets}/club-update-basicInfo/http-request.adoc[]
+==== 응답
+include::{snippets}/club-update-basicInfo/http-response.adoc[]

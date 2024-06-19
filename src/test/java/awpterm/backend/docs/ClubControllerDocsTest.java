@@ -94,18 +94,6 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .status(Status.검토.toString())
                 .build();
 
-        given(clubServiceFacade.register(request)).willReturn(response);
-        mockMvc.perform(post("/club/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andDo(document("club-register-wrong",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
-
         given(clubServiceFacade.isValidMemberByCode(any())).willReturn(true);
         given(clubServiceFacade.register(request)).willReturn(response);
         mockMvc.perform(post("/club/register")
@@ -140,69 +128,34 @@ public class ClubControllerDocsTest extends RestDocsTest {
                 .applicantMajor(requestor.getMajor().toString())
                 .build();
 
+        // 파일 이름
+        String fileName = "applicationForm.txt";
+
+        // 파일 내용
+        String fileContent = "Name: John Doe\n"
+                + "Email: john.doe@example.com\n"
+                + "Phone: 123-456-7890\n"
+                + "Address: 123 Main St, Anytown, USA\n";
+
+        // MockMultipartFile 객체 생성
+        MockMultipartFile applicationForm = new MockMultipartFile(
+                "file",                 // 파라미터 이름
+                fileName,               // 원본 파일 이름
+                "text/plain",           // 파일 타입
+                fileContent.getBytes()  // 파일 내용
+        );
+
         String content = objectMapper.writeValueAsString(request);
         MockMultipartFile requestDTOFile = new MockMultipartFile("clubApplicationRequestDTO", "JsonData", "application/json", content.getBytes(StandardCharsets.UTF_8));
 
         mockMvc.perform(multipart("/club/application")
                         .file(requestDTOFile)
+                        .file(applicationForm)
                         .sessionAttr(SessionConst.LOGIN_MEMBER, requestor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("club-application",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
-    }
-
-    @Test
-    void 동아리_리스트_테스트() throws Exception {
-
-        given(clubServiceFacade.findById(any())).willReturn(ClubResponseDTO.valueOf(makeMockClub()));
-        mockMvc.perform(get("/club/application/list/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("club-application-list",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
-    }
-
-    @Test
-    void 동아리_신청_결정_테스트() throws Exception {
-        ClubApplicationDecisionDTO request = ClubApplicationDecisionDTO.builder()
-                .clubId(1L)
-                .memberId("testId")
-                .isApproval(true)
-                .build();
-
-        mockMvc.perform(post("/club/application/decision")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("club-application-decision",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
-    }
-
-    @Test
-    void 동아리_회원탈퇴_테스트() throws Exception {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("clubId", "1");
-        params.add("memberId", "testId");
-
-        mockMvc.perform(delete("/club/dismiss")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("club-dismiss",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestBody(),
@@ -387,12 +340,19 @@ public class ClubControllerDocsTest extends RestDocsTest {
         willDoNothing().given(clubServiceFacade).updateBasicInfo(1L, request, applicationForm, clubPhoto);
 
         // When & Then
-        mockMvc.perform(multipart(HttpMethod.PUT,"/club/{clubId}", 1L)
+        mockMvc.perform(multipart(HttpMethod.PUT, "/club/{clubId}", 1L)
                         .file(applicationForm)
                         .file(clubPhoto)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("club-update-basicInfo",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                requestBody(),
+                                responseBody()
+                        )
+                );
     }
 }

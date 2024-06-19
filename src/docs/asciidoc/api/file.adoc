@@ -1,7 +1,0 @@
-[[club]]
-=== 파일 다운로드
-==== 요청
-include::{snippets}/file-download/http-request.adoc[]
-
-==== 응답 (파일의 바이너리가 전달될 예정)
-include::{snippets}/file-download/http-response.adoc[]
