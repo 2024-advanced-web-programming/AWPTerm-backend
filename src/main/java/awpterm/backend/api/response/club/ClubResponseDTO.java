@@ -35,6 +35,16 @@ public class ClubResponseDTO {
         Long fileId = null;
         String fileName = null;
 
+        String vicePresidentName = null;
+        String secretaryName = null;
+
+        if(club.getVicePresident() != null) {
+            vicePresidentName = club.getVicePresident().getName();
+        }
+        if(club.getSecretary() != null) {
+            secretaryName = club.getSecretary().getName();
+        }
+
         if (club.getClubDetail() != null) {
             ClubDetail clubDetail = club.getClubDetail();
             if (clubDetail.getRepresentativePicture() != null) {
@@ -53,8 +63,8 @@ public class ClubResponseDTO {
         return ClubResponseDTO.builder()
                 .id(club.getId())
                 .presidentName(club.getPresident().getName())// 대표자 이름
-                .vicePresidentName(club.getVicePresident().getName())
-                .secretaryName(club.getSecretary().getName())
+                .vicePresidentName(vicePresidentName)
+                .secretaryName(secretaryName)
                 .representativePicture(representativePictureUrl)
                 .introduction(introduction)
                 .clubType(club.getClubType().toString())
@@ -77,6 +87,16 @@ public class ClubResponseDTO {
         String fileName = null;
         Club club = clubMember.getClub();
 
+        String vicePresidentName = null;
+        String secretaryName = null;
+
+        if(club.getVicePresident() != null) {
+            vicePresidentName = club.getVicePresident().getName();
+        }
+        if(club.getSecretary() != null) {
+            secretaryName = club.getSecretary().getName();
+        }
+
         if (club.getClubDetail() != null) {
             ClubDetail clubDetail = club.getClubDetail();
             if (clubDetail.getRepresentativePicture() != null) {
@@ -95,8 +115,8 @@ public class ClubResponseDTO {
         return ClubResponseDTO.builder()
                 .id(club.getId())
                 .presidentName(club.getPresident().getName())
-                .vicePresidentName(club.getVicePresident().getName())
-                .secretaryName(club.getSecretary().getName())
+                .vicePresidentName(vicePresidentName)
+                .secretaryName(secretaryName)
                 .representativePicture(representativePictureUrl)
                 .introduction(introduction)
                 .clubType(club.getClubType().toString())
