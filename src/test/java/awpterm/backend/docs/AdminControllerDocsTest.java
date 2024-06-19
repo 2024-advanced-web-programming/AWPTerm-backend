@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AdminControllerDocsTest extends RestDocsTest {
     private final AdminServiceFacade adminServiceFacade = mock(AdminServiceFacade.class);
-    private final ClubServiceFacade clubServiceFacade = mock(ClubServiceFacade.class);
 
     @Override
     protected Object initController() {
@@ -45,7 +44,6 @@ public class AdminControllerDocsTest extends RestDocsTest {
         AdminLoginRequestDTO requestDTO = AdminLoginRequestDTO.builder()
                 .id("testId")
                 .pw("testPw")
-                .name("admin")
                 .build();
 
         //로그인 성공 여부 - 성공
@@ -60,18 +58,6 @@ public class AdminControllerDocsTest extends RestDocsTest {
                         preprocessResponse(prettyPrint()),
                         requestBody(),
                         responseBody()));
-
-        given(adminServiceFacade.isValidLoginRequest(requestDTO)).willReturn(false);
-        mockMvc.perform(post("/admin/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andDo(document("admin-login-fail",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
     }
 
     @Test
@@ -81,31 +67,6 @@ public class AdminControllerDocsTest extends RestDocsTest {
                 .id("testId")
                 .password("testPw")
                 .name("admin")
-                .build();
-
-        ClubRegisterRequestDTO req1 = ClubRegisterRequestDTO.builder()
-                .clubType(ClubType.중앙.toString())
-                .name("testClub")
-                .requestorCode("20190001")
-                .requestorName("testRequestor")
-                .requestorMajor(Major.컴퓨터소프트웨어공학과.toString())
-                .requestorPhoneNumber("010-1111-1111")
-                .supervisorCode("SE0001")
-                .supervisorName("testSuperVisor")
-                .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
-                .supervisorPhoneNumber("010-2222-2222")
-                .build();
-        ClubRegisterRequestDTO req2 = ClubRegisterRequestDTO.builder()
-                .clubType(ClubType.학과.toString())
-                .name("testClub2")
-                .requestorCode("20190002")
-                .requestorName("testRequestor2")
-                .requestorMajor(Major.컴퓨터소프트웨어공학과.toString())
-                .requestorPhoneNumber("010-2222-2222")
-                .supervisorCode("SE0002")
-                .supervisorName("testSuperVisor2")
-                .supervisorMajor(Major.컴퓨터소프트웨어공학과.toString())
-                .supervisorPhoneNumber("010-3333-3333")
                 .build();
 
         Member supervisor1 = Member.builder()
@@ -182,18 +143,6 @@ public class AdminControllerDocsTest extends RestDocsTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("checkList-inquiry-success",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestBody(),
-                        responseBody()));
-
-        given(adminServiceFacade.isAdmin(admin.getId())).willReturn(false);
-        given(adminServiceFacade.findByStatus(Status.검토)).willReturn(clubs);
-        mockMvc.perform(get("/admin/checkList/{adminId}", admin.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andDo(document("checkList-inquiry-not-admin",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestBody(),

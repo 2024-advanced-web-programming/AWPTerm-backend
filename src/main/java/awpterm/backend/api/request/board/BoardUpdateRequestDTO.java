@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BoardUpdateRequestDTO {
+public class BoardUpdateRequestDTO implements BoardRequestDTO{
     Long boardId;
     String title;
     String content;

@@ -19,7 +19,9 @@ public class AppConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/", "/error",
                         "/member/login", "/member/register", "/member/kakao/login", "/member/kakao/token",
-                        "/admin/**");
+                        "/admin/**",
+                        "/board/all/{boardType}", "/board/{boardId}", "/board/inquiry/noticeType", "/board/inquiry/all",
+                        "/club/all");
 
         registry.addInterceptor(new AdminLoginCheckInterceptor())
                 .order(3)

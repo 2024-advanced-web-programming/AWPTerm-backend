@@ -5,6 +5,7 @@ import awpterm.backend.api.request.member.MemberRegisterRequestDTO;
 import awpterm.backend.api.response.club.ClubApplicantResponseDTO;
 import awpterm.backend.api.response.club.ClubResponseDTO;
 import awpterm.backend.api.response.member.MemberResponseDTO;
+import awpterm.backend.domain.ClubMember;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.Position;
 import lombok.RequiredArgsConstructor;

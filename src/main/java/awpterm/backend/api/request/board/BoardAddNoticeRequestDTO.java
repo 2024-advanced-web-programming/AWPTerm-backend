@@ -7,7 +7,7 @@ import awpterm.backend.enums.BoardType;
 import lombok.Data;
 
 @Data
-public class BoardAddNoticeRequestDTO {
+public class BoardAddNoticeRequestDTO implements BoardRequestDTO{
     String title;
     Long clubId;
     String content;

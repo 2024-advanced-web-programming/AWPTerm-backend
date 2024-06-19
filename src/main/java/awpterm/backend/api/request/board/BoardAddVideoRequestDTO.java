@@ -9,18 +9,16 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BoardAddVideoRequestDTO {
+public class BoardAddVideoRequestDTO implements BoardRequestDTO{
     String title;
     Long clubId;
     String videoURL;
-    String content;
 
     public Board toEntity() {
         return Board.builder()
                 .title(title)
                 .id(clubId)
                 .videoURL(videoURL)
-                .content(content)
                 .boardType(BoardType.활동_영상)
                 .build();
     }

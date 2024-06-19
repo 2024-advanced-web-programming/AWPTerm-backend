@@ -3,17 +3,18 @@ package awpterm.backend.service;
 import awpterm.backend.api.request.board.*;
 import awpterm.backend.api.response.board.BoardResponseDTO;
 import awpterm.backend.domain.Board;
-import awpterm.backend.domain.FileProperty;
+import awpterm.backend.domain.Club;
 import awpterm.backend.domain.Member;
 import awpterm.backend.enums.BoardType;
 import awpterm.backend.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,57 +23,41 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public BoardResponseDTO saveAllTypeBoard(Member loginMember, BoardAddAllTypeRequestDTO boardAddAllTypeRequestDTO) {
-        Board board = boardAddAllTypeRequestDTO.toEntity();
-        board.setWriter(loginMember);
-        return BoardResponseDTO.valueOf(boardRepository.save(board));
+    public BoardResponseDTO saveAllTypeBoard(Member loginMember, BoardAddAllTypeRequestDTO boardAddAllTypeRequestDTO, Club club) {
+        return BoardResponseDTO.valueOf(boardRepository.save(createBoard(loginMember, boardAddAllTypeRequestDTO, club)));
     }
 
-    public BoardResponseDTO savePhotoBoard(Member loginMember, BoardAddPhotoRequestDTO boardAddPhotoRequestDTO) {
-        Board board = boardAddPhotoRequestDTO.toEntity();
-        board.setWriter(loginMember);
-        return BoardResponseDTO.valueOf(boardRepository.save(board));
+    public BoardResponseDTO savePhotoBoard(Member loginMember, BoardAddPhotoRequestDTO boardAddPhotoRequestDTO, Club club) {
+        return BoardResponseDTO.valueOf(boardRepository.save(createBoard(loginMember, boardAddPhotoRequestDTO, club)));
     }
 
-    public BoardResponseDTO saveVideoBoard(Member loginMember, BoardAddVideoRequestDTO boardAddVideoRequestDTO) {
-        Board board = boardAddVideoRequestDTO.toEntity();
-        board.setWriter(loginMember);
-        return BoardResponseDTO.valueOf(boardRepository.save(board));
+    public BoardResponseDTO saveVideoBoard(Member loginMember, BoardAddVideoRequestDTO boardAddVideoRequestDTO, Club club) {
+        return BoardResponseDTO.valueOf(boardRepository.save(createBoard(loginMember, boardAddVideoRequestDTO, club)));
     }
 
-    public BoardResponseDTO saveRecruitmentBoard(Member loginMember, BoardAddRecruitmentRequestDTO boardAddRecruitmentRequestDTO) {
-        Board board = boardAddRecruitmentRequestDTO.toEntity();
-        board.setWriter(loginMember);
-        return BoardResponseDTO.valueOf(boardRepository.save(board));
+    public BoardResponseDTO saveRecruitmentBoard(Member loginMember, BoardAddRecruitmentRequestDTO boardAddRecruitmentRequestDTO, Club club) {
+        return BoardResponseDTO.valueOf(boardRepository.save(boardRepository.save(createBoard(loginMember, boardAddRecruitmentRequestDTO, club))));
     }
 
-    public BoardResponseDTO saveNoticeBoard(Member loginMember, BoardAddNoticeRequestDTO boardAddNoticeRequestDTO) {
-        Board board = boardAddNoticeRequestDTO.toEntity();
-        board.setWriter(loginMember);
-        return BoardResponseDTO.valueOf(boardRepository.save(board));
+    public BoardResponseDTO saveNoticeBoard(Member loginMember, BoardAddNoticeRequestDTO boardAddNoticeRequestDTO, Club club) {
+        return BoardResponseDTO.valueOf(boardRepository.save(boardRepository.save(createBoard(loginMember, boardAddNoticeRequestDTO, club))));
     }
 
     public List<BoardResponseDTO> findAllByBoardType(BoardType boardType) {
-        return boardRepository.findAllByBoardType(boardType);
+        return boardRepository.findAllByBoardTypeOrderByTimestampDesc(boardType);
     }
 
-    public Optional<Board> findByBoardId(Long boardId) {
-        return boardRepository.findById(boardId);
+    public BoardResponseDTO findByBoardId(Long boardId) {
+        return BoardResponseDTO.valueOf(Objects.requireNonNull(boardRepository.findById(boardId).orElse(null)));
     }
+    private Board createBoard(Member loginMember, BoardRequestDTO boardDTO, Club club) {
+        Board board = boardDTO.toEntity();
+        board.setClub(club);
+        board.setWriter(loginMember);
 
-    public boolean updateByDTO(BoardUpdateRequestDTO requestDTO) {
-        Board board = findByBoardId(requestDTO.getBoardId()).orElse(null);
-        if(board == null) {
-            return false;
-        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        board.setTimestamp(LocalDateTime.now().format(formatter));
 
-        board.setTitle(requestDTO.getTitle());
-        board.setBoardType(requestDTO.getBoardType());
-        board.setContent(requestDTO.getContent());
-        board.setClub(requestDTO.getClub());
-        if(requestDTO.getBoardType() == BoardType.활동_영상) {
-            board.setVideoURL(requestDTO.getVideoURL());
-        }
-        return true;
+        return board;
     }
 }

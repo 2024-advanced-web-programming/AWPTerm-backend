@@ -32,4 +32,5 @@ public class Board extends BaseEntity {
     private Club club;
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
+    private String timestamp;
 }
