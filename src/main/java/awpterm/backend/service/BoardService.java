@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -49,8 +50,8 @@ public class BoardService {
         return boardRepository.findAllByBoardType(boardType);
     }
 
-    public Board findByBoardId(Long boardId) {
-        return boardRepository.findById(boardId).orElse(null);
+    public BoardResponseDTO findByBoardId(Long boardId) {
+        return BoardResponseDTO.valueOf(Objects.requireNonNull(boardRepository.findById(boardId).orElse(null)));
     }
     private Board createBoard(Member loginMember, BoardRequestDTO boardDTO, Club club) {
         Board board = boardDTO.toEntity();

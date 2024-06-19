@@ -53,7 +53,7 @@ public class BoardServiceFacade {
         return boardService.findAllByBoardType(boardType);
     }
 
-    public Board findByBoardId(Long boardId) {
+    public BoardResponseDTO findByBoardId(Long boardId) {
         return boardService.findByBoardId(boardId);
     }
 
