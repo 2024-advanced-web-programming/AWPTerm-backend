@@ -44,7 +44,7 @@ public class BoardService {
     }
 
     public List<BoardResponseDTO> findAllByBoardType(BoardType boardType) {
-        return boardRepository.findAllByBoardTypeOrderByTimeStampDesc(boardType);
+        return boardRepository.findAllByBoardTypeOrderByTimestampDesc(boardType);
     }
 
     public BoardResponseDTO findByBoardId(Long boardId) {
