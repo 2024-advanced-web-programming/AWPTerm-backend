@@ -162,6 +162,7 @@ public class ClubServiceFacade {
         Member vicePresident = memberService.findById(clubUpdateBasicInfoRequestDTO.getVicePresidentId());
         Member secretary = memberService.findById(clubUpdateBasicInfoRequestDTO.getSecretaryId());
 
+        club.setName(clubUpdateBasicInfoRequestDTO.getClubName());
         club.setClubDetail(clubDetail);
         club.setClubDetail(clubDetail);
         club.setPresident(president);

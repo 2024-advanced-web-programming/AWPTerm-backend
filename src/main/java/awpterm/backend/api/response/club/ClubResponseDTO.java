@@ -14,6 +14,8 @@ import java.util.List;
 public class ClubResponseDTO {
     private Long id;
     private String presidentName;
+    private String vicePresidentName;
+    private String secretaryName;
     private String representativePicture;
     private String introduction;
     private String clubType;
@@ -50,12 +52,14 @@ public class ClubResponseDTO {
 
         return ClubResponseDTO.builder()
                 .id(club.getId())
-                .presidentName(club.getPresident().getName())
+                .presidentName(club.getPresident().getName())// 대표자 이름
+                .vicePresidentName(club.getVicePresident().getName())
+                .secretaryName(club.getSecretary().getName())
                 .representativePicture(representativePictureUrl)
                 .introduction(introduction)
                 .clubType(club.getClubType().toString())
-                .name(club.getName())
-                .supervisorName(club.getSupervisor().getName())
+                .name(club.getName()) //동아리 이름
+                .supervisorName(club.getSupervisor().getName()) //지도교수 이름
                 .status(club.getStatus().toString())
                 .rejectedReason(club.getRejectReason())
                 .regularMeetingTime(regularMeetingTime)
@@ -91,6 +95,8 @@ public class ClubResponseDTO {
         return ClubResponseDTO.builder()
                 .id(club.getId())
                 .presidentName(club.getPresident().getName())
+                .vicePresidentName(club.getVicePresident().getName())
+                .secretaryName(club.getSecretary().getName())
                 .representativePicture(representativePictureUrl)
                 .introduction(introduction)
                 .clubType(club.getClubType().toString())
